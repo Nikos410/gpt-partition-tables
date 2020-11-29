@@ -1,0 +1,54 @@
+% !TeX encoding = UTF-8
+\documentclass[12pt,ngerman,a4paper,parskip]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[a4paper,left=2cm,right=2cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{svg}
+\usepackage{hyperref}
+
+% Code listings
+\usepackage{minted}
+
+% Make the frame parameter available to includegraphics
+\usepackage[export]{adjustbox}
+
+% Use helvetica font
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Format header and footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyfoot[R]{\thepage}
+\fancyhead[L]{\small GPT Partitionstabellen - Nikos Epping}
+
+% Setup quotes
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+\title{GPT Partitionstabellen}
+\subtitle{Seminar \textit{Algorithmen und Datenstrukturen} im Wintersemester 2020/21}
+\author{Nikos Epping}
+\date{\today}
+
+\begin{document}
+% No page numbers yet
+\pagenumbering{gobble}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+% Start page numbering here
+\pagenumbering{arabic}
+
+\section{Einleitung}
+
+
+\end{document}
