@@ -1,0 +1,54 @@
+\section{UUID}
+
+Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (\textbf{G}lobally \textbf{U}nique \textbf{ID}entifier), beispielsweise um Partitionen eindeutig zu identifizieren.
+Diese sind allgemeiner  als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt. 
+Dabei handelt es sich um 128 Bit große Zahlen, die auch ohne zentrale Registrierungsstelle als praktisch eindeutig verwendet werden können.\footnote{\url{https://tools.ietf.org/html/rfc4122}}
+
+\subsection{Eindeutigkeit}
+
+\subsection{Varianten und Versionen}
+\label{sec:guid:variants}
+
+Die "Variante" einer UUID spezifiziert Informationen über dessen Aufbau und könnte auch als "Typ" bezeichnet werden.
+Welche Variante vorliegt ist dem neunten Oktett (Byte) einer UUID zu entnehmen.
+Abhängig von den Werten der drei höchstwertigsten Bits kann zwischen 4 Varianten unterschieden werden.
+
+Dabei ist eine Variante für zukünftige Nutzung reserviert und zwei weitere werden für Abwärtskompatibilität zu älteren Formaten verwendet. 
+Die vierte Variante wird im weiteren genauer beschrieben.
+
+Für diese Variante wird zwischen fünf "Versionen" unterschieden, die auch "Sub-Typ" bezeichnet werden konnte.
+Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts zu erkennen.
+
+Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine UUID generiert werden kann.
+Je nach Anwendungsfall sind verschiedene Methoden, also UUID-Versionen, besser geeignet.
+
+
+\subsection{Format}
+\label{sec:guid:format}
+
+Das genaue Format einer UUID ist von ihrer Version abhängig.
+Bei einer Darstellung in Textform wird eine UUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} angegeben sind. 
+
+\begin{table}[ht]
+    \caption{Aufbau einer UUID}
+    \label{tbl:guid_layout}
+
+    \begin{center}
+        \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Feld}                                                                                         & \textbf{Größe (Oktette)} \\ \hline
+        \texttt{time\_low}                                                                                    & 4                        \\ \hline
+        \texttt{time\_mid}                                                                                    & 2                        \\ \hline
+        \texttt{time\_hi\_and\_version}                                                                       & 2                        \\ \hline
+        \begin{tabular}[c]{@{}l@{}}\texttt{clock\_seq\_hi\_and\_res} \\ \texttt{clock\_seq\_low}\end{tabular} & 2                        \\ \hline
+        \texttt{node}                                                                                         & 6                        \\ \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+Diese Gruppierung basiert auf den Feldern der ersten, Timestamp-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig ist.
+Die einzelnen Oktette werden jeweils als zweistellige Dezimalzahl dargestellt und die Gruppen werden durch Bindestriche getrennt.
+Eine UUID könnte also zum Beispiel wie folgt aussehen:
+
+\centering
+\texttt{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}
