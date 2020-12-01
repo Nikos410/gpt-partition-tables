@@ -1,0 +1,14 @@
+\section{Einleitung}
+Die Speicherung von Daten auf einem Datenträger kann auf zahlreiche unterschiedliche Varianten realisiert werden.
+Verschiedene Dateisysteme ordnen die gleichen Daten unterschiedlich auf einem Datenträger an.
+Beispielsweise unterteilt das Dateisystem \textit{ext2} Dateien in Blöcke und verwaltet diese mit sogenannten \textit{inodes}, wohingegen bei \textit{Btrfs} die Blöcke anhand einer Baumstruktur organisiert werden. 
+Jede Speicherungsmethode hat Vor- und Nachteile in verschiedenen Anwendungsfällen, weshalb es nützlich sein kann, mehrere verschiedene Dateisysteme auf einem Datenträger zu betreiben.
+Dazu wird ein Datenträger in Bereiche unterteilt, die "Partitionen" genannt werden.
+Aber auch aus vielen weiteren Gründen kann es hilfreich sein, einen Datenträger in verschiedene Partitionen zu unterteilen.
+
+Damit ein Computersystem die Daten auf einem Datenträger sinnvoll lesen kann, muss klar sein, wie diese gespeichert sind.
+Dafür werden Partitionstabellen verwendet, die speichern, welche Partitionen auf einem Datenträger vorliegen.
+
+Ein Standard, der seit den 1980er-Jahren verwendet wird, ist der "Master Boot Record" (MBR).
+Dieser besitzt allerdings einige technische Limitationen\footnote{Vgl. Abschnitt TODO}, weshalb eine neue Spezifikation mit dem Namen "GUID Partition Table" (GPT) entwickelt wurde.\footnote{\url{www.uefi.org/sites/default/files/resources/UEFI_Drive_Partition_Limits_Fact_Sheet.pdf}}
+Diese Spezifikation wird in dieser Ausarbeitung genauer erläutert.
