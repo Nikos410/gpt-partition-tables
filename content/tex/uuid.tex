@@ -8,14 +8,14 @@ Dabei handelt es sich um 128 Bit große Zahlen, die auch ohne zentrale Registrie
 \subsection{Varianten und Versionen}
 \label{sec:guid:variants}
 
-Die "Variante" einer UUID spezifiziert Informationen über dessen Aufbau und könnte auch als "Typ" bezeichnet werden.
+Die "Variante" einer UUID spezifiziert Informationen über dessen Aufbau.
 Welche Variante vorliegt ist dem neunten Oktett (Byte) einer UUID zu entnehmen.
 Abhängig von den Werten der drei höchstwertigsten Bits kann zwischen 4 Varianten unterschieden werden.
 
 Dabei ist eine Variante für zukünftige Nutzung reserviert und zwei weitere werden für Abwärtskompatibilität zu älteren Formaten verwendet. 
 Die vierte Variante wird im weiteren genauer beschrieben.
 
-Für diese Variante wird zwischen fünf "Versionen" unterschieden, die auch "Sub-Typ" bezeichnet werden konnte.
+Für diese Variante wird zwischen fünf "Versionen" unterschieden.
 Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts zu erkennen.
 
 Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine UUID generiert werden kann.
