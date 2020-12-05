@@ -4,7 +4,7 @@ Dafür wird eine Nomenklatur benötigt, um die Bereiche auf dem physischen Daten
 
 \subsection{Cylinder-Head-Sector}
 Das Verfahren "Cylinder-Head-Sector" (CHS) orientiert sich am physischen Aufbau von Festplatten.
-Durch Kombination von Lesekopf, Sektor und Zylinder / Spur (vgl. Abbildung \ref{fig:chs}) entsteht sozusagen ein dreidimensionales Koordinatensystem, in dem eine Position auf einem Datenträger eindeutig identifiziert werden kann.
+Durch Kombination von Lesekopf, Sektor und Zylinder / Spur (vgl. Abbildung \ref{fig:chs}) entsteht sozusagen ein dreidimensionales Koordinatensystem, in dem eine Position auf einem Datenträger eindeutig identifiziert werden kann.\footnote{ATA/ATAPI-5 Spezifikation - 6.2}
 
 \begin{figure}[ht]
     \centering
@@ -13,4 +13,18 @@ Durch Kombination von Lesekopf, Sektor und Zylinder / Spur (vgl. Abbildung \ref{
     \label{fig:chs}
 \end{figure}
 
-\subsubsection{Probleme}
+In modernen Festplatten werden allerdings oft komplexere Geometrien zur Anordnung der Daten verwendet, als von CHS vorgesehen sind.
+Diese Geometrien werden in diesen Fällen meist von einem Festplatten-Controller, welcher den tatsächlichen Aufbau der Festplatte kennt, in CHS-Werte übersetzt, um die Daten zu adressieren.\footnote{\url{http://jdebp.eu/FGA/disc-partition-alignment.html}} 
+Außerdem sind modernere Datenträger, wie zum Beispiel Flash-Speicher in SSDs, grundlegend anders aufgebaut als klassische Festplatten.
+
+Daher entspricht die CHS-Adressierung heutzutage nur noch in den seltensten Fällen dem tatsächlichen physischen Aufbau eines Datenträgers. 
+Mittlerweile wird CHS als obsolet angesehen und durch LBA\footnote{Siehe Abschnitt \ref{sec:LBA}} ersetzt.\footnote{ATA/ATAPI-6 Spezifikation - 6.2}
+
+
+\subsection{Logical Block Addressing}
+\label{sec:LBA}
+Bei dem Verfahren "Logical Block Addressing" (LBA) werden die Daten auf einem Datenträge in 512 Byte große Blöcke (Sektoren) unterteilt, die aufsteigend nummeriert werden.\footnote{ATA/ATAPI-6 Spezifikation - 3.1.30 / 3.1.41}
+Der Controller des Datenträgers, der die genaue Geometrie kennt, übersetzt die Block-Nummer dann in den physischen Speicherort der Daten.
+
+Der neuste Standard addressiert die Blöcke mit 48 Bit großen Werten.
+Dadurch ergibt sich eine maximale Größe von $ 2^{48} \cdot 512 \mathrm{B} \approx 144\mathrm{PB} $.\footnote{ATA/ATAPI-6 Spezifikation - 6.20}
