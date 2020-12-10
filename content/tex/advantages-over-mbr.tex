@@ -3,27 +3,27 @@
 
 \begin{itemize}
     \item \textbf{Eindeutige Identifizierung von Partitionen:} 
-    Jede Partition erhält eine UUID, um sie eindeutig identifizieren zu können.\footnote{UEFI spec - 5.1}
+    Jede Partition erhält eine UUID, um sie eindeutig identifizieren zu können.
     Bei anderen Verfahren werden Partitionen meist durch ihre Partition auf dem Datenträger identifiziert (beispielsweise "Partition 2").
     Dies kann zu Problemen führen. 
     Wenn beispielsweise die erste Partition auf einem Datenträer in 2 Partitionen aufgeteilt wird, erhöht sich auch die Partitions-"Nummer" der darauf folgenden Partitionen (beispielsweise wird Partition 2 zu Partition 3).
 
     \item \textbf{Maximale Anzahl von Partitionen:}
-    Während MBR nur 4 primäre Partitionen unterstützt,\footnote{UEFI spec - 5.1} kann GPT $ 2^{32} $ Partitionen verwalten.\footnote{UEFI spec - 5.3.2}
-    Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux aktuell maximal 256 Partionen verwendet werden.\footnote{\url{https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tree/include/linux/genhd.h?id=006405b324c071ebdcb5f6ebdc853edf8a8b7690} - Zeile 31 - abgerufen am 06.12.2020}
+    Während MBR nur 4 primäre Partitionen unterstützt, kann GPT $ 2^{32} $ Partitionen verwalten.
+    Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux aktuell maximal 256 Partionen auf einem Datenträger verwendet werden.\footnote{\url{https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tree/include/linux/genhd.h?id=006405b324c071ebdcb5f6ebdc853edf8a8b7690} - Zeile 31}
 
     \item \textbf{Maximale Größe von Partitionen:}
-    MBR speichert die LBA-Adresse des ersten Blocks und die Länge einer Partition mit 32 Bit großen Integer-Werten.\footnote{UEFI spec}
+    MBR speichert die LBA-Adresse des ersten Blocks und die Länge einer Partition mit 32 Bit großen Integer-Werten.
     Bei 512 Byte großen Blöcken ergibt sich so eine maximale Partitionsgröße von $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $.
 
     In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann.
     Da MBR (bei LBA-Adressierung) allerdings nicht die Block-Nummer des letzten Blockes einer Partition speichert, sondern dessen Länge in Blöcken, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
     Um dies zu erreichen, kann eine 2TiB große Partition angelegt werden, dessen Startblock sich an der größten möglichen LBA-Adresse befindet.
     Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, die intern LBA-Block-Nummern verwalten können, die größer als 32 Bit sind.
-    Diese Betriebssysteme können meist auch das GPT verwenden, warum dieses Verfahren in der Praxis selten angewendet wird.\footnote{http://www.rodsbooks.com/gdisk/workarounds.html}
+    Diese Betriebssysteme können meist auch das GPT verwenden, warum dieses Verfahren in der Praxis selten angewendet wird.\cite{mbr-4tb-workaround}
 
     Für heutige Datenträger sind oft weder 2TiB noch 4TiB ausreichend.
-    GPT verwendet stattdessen 64 Bit große Datenstrukturen um Anfang und Ende einer Partition zu speichern,\footnote{Vgl. Abschnitt \ref{sec:structure:header}} wodurch sich bei 512 Byte großen Blöcken eine maximale Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.
+    GPT verwendet stattdessen 64 Bit große Datenstrukturen um Anfang und Ende einer Partition zu speichern, wodurch sich bei 512 Byte großen Blöcken eine maximale Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.
 
     \small
     \textit{
@@ -33,8 +33,8 @@
     Ist aber ne logarithmische Skala, das hochzurechnen wann das 144 PB erreicht wird frickelig.
     }
 
-    \item \textbf{Datensicherheit:} GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers.\footnote{Vgl. Abschnitt \ref{sec:structure}}
-    Außerdem werden CRC32 Checksummen verwendet um die Integrität der Daten sicherzustellen. \footnote{UEFI spec - 5.1}
+    \item \textbf{Datensicherheit:} GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers.
+    Außerdem werden CRC32 Checksummen verwendet um die Integrität der Daten sicherzustellen.
 
-    \item \textbf{Erweiterbarkeit:} Version und Größe der Datenstrukturen werden in der Partitionstabelle gespeichert, um zukünftige Erweiterungen vornehmen zu können.\footnote{UEFI spec - 5.1}
+    \item \textbf{Erweiterbarkeit:} Version und Größe der Datenstrukturen werden in der Partitionstabelle gespeichert, um zukünftige Erweiterungen vornehmen zu können.
 \end{itemize}

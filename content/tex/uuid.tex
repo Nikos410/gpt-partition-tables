@@ -3,7 +3,7 @@
 Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (\textbf{G}lobally \textbf{U}nique \textbf{ID}entifier), beispielsweise um Partitionen eindeutig zu identifizieren.
 Diese sind allgemeiner als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt. 
 
-Dabei handelt es sich um 128 Bit große Zahlen, die auch ohne zentrale Registrierungsstelle als praktisch eindeutig angesehen werden können.\footnote{\url{https://tools.ietf.org/html/rfc4122}}
+Dabei handelt es sich um 128 Bit große Zahlen, die auch ohne zentrale Registrierungsstelle als praktisch eindeutig angesehen werden können.
 
 \subsection{Varianten und Versionen}
 \label{sec:guid:variants}
@@ -19,7 +19,7 @@ Für diese Variante wird zwischen fünf "Versionen" unterschieden.
 Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts zu erkennen.
 
 Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine UUID generiert werden kann.
-Je nach Anwendungsfall sind verschiedene Methoden, also UUID-Versionen, besser geeignet.\footnote{\url{https://tools.ietf.org/html/rfc4122}}
+Je nach Anwendungsfall sind verschiedene Methoden, also UUID-Versionen, besser geeignet.
 
 
 \subsection{Format}
@@ -45,8 +45,8 @@ Bei einer Darstellung in Textform wird eine UUID in 5 Gruppen unterteilt, die in
     \end{center}
 \end{table}
 
-Diese Gruppierung basiert auf den Feldern der ersten, Timestamp-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig ist.
-Die einzelnen Oktette (Bytes) werden jeweils als zweistellige Hexadezimalzahl dargestellt und die Gruppen werden durch Bindestriche getrennt.\footnote{\url{https://tools.ietf.org/html/rfc4122}}
+Diese Gruppierung basiert auf den Feldern der ersten, Timestamp-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig ist.\cite{uuid-rfc}
+Die einzelnen Oktette (Bytes) werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
 Eine UUID könnte also zum Beispiel wie folgt aussehen:
 
 \begin{center}
