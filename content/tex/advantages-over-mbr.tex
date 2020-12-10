@@ -10,7 +10,7 @@
 
     \item \textbf{Maximale Anzahl von Partitionen:}
     Während MBR nur 4 primäre Partitionen unterstützt, kann GPT $ 2^{32} $ Partitionen verwalten.
-    Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux aktuell maximal 256 Partionen auf einem Datenträger verwendet werden.\footnote{\url{https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tree/include/linux/genhd.h?id=006405b324c071ebdcb5f6ebdc853edf8a8b7690} - Zeile 31}
+    Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux maximal 256 Partionen\footnote{\url{https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tree/include/linux/genhd.h?id=006405b324c071ebdcb5f6ebdc853edf8a8b7690} - Zeile 31} und unter Windows 128 Partitionen auf einem Datenträger verwendet werden.
 
     \item \textbf{Maximale Größe von Partitionen:}
     MBR speichert die LBA-Adresse des ersten Blocks und die Länge einer Partition mit 32 Bit großen Integer-Werten.
