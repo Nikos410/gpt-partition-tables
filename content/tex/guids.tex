@@ -6,30 +6,27 @@ Dabei handelt es sich um 128 Bit große Zahlen, die verwendet werden können, um
 GUIDs sind allgemeiner als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt, in dieser Ausarbeitung wird allerdings die Bezeichnung GUID verwendet, um konsistent mit GPT zu sein.
 
 \subsection{Motivation}
+Aktuelle Softwaresysteme sind oft Zusammenschlüsse aus verschiedenen Anwendungen oder skalierbare Cloud-Lösungen mit mehreren Knoten / Instanzen.
+In diesen Systemen ist es nicht trivial, Informationen eindeutig zu identifizieren. Einfache, aufsteigende IDs sind beispielsweise nicht praktikabel, wenn mehrere Knoten in einem solchen System IDs vergeben können, da so Überschneidungen auftreten können.
+
+Die Synchronisierung der bereits vergebenen IDs zwischen allen Knoten ist aufwändig, fehleranfällig und beeinträchtigt die Skalierbarkeit, wodurch diese Lösung meist nicht verwendet wird.
+Auch die Verwendung einer zentralen Registrierungsstelle, die als führendes System IDs vergibt, ist nicht ideal, da so ebenfalls die Skalierbarkeit beeinträchtigt wird und darüberhinaus ein Single Point of Failure geschaffen wird, wodurch der Vorteil eines verteilten Systems wieder zunichte gemacht wird.
+
+GUIDs lösen diese Probleme, da sie als praktisch eindeutig verwendet werden können, ohne dass eine Abstimmung mit anderen Knoten oder eine zentrale Registrierungsstelle notwendig ist.
+Kollisionen sind zwar nicht ausgeschlossen, aber so unwahrscheinlich, dass sie in der Praxis nicht berücksichtigt werden müssen.
 
 
-\subsection{Varianten und Versionen}
-\label{sec:guid:variants}
+\subsection{Generierung}
+Bei GUIDs wird zwischen 5 Versionen unterschieden, die jeweils unterschiedliche Methoden zur Generierung der 128 Bits verlangen.
+Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts einer GUID zu erkennen.
 
-Die "Variante" einer GUID spezifiziert Informationen über dessen Aufbau.
-Welche Variante vorliegt ist dem neunten Oktett (Byte) einer GUID zu entnehmen.
-Abhängig von den Werten der drei höchstwertigsten Bits kann zwischen 4 Varianten unterschieden werden.
+Je nach Anwendungsfall können verschiedene Methoden, also GUID-Versionen, besser geeignet sein.
+Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während eine andere Variante komplett zufallsbasiert erstellt wird.\footnote{
+    Auf die Details der Generierung wird hier nicht weiter eingegangen, das dies den Rahmen dieser Ausarbeitung sprengen würde.
+}
 
-Dabei ist eine Variante für zukünftige Nutzung reserviert und zwei weitere werden für Abwärtskompatibilität zu älteren Formaten verwendet. 
-Die vierte Variante wird im weiteren genauer beschrieben.
-
-Für diese Variante wird zwischen fünf "Versionen" unterschieden.
-Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts zu erkennen.
-
-Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine GUID generiert werden kann.
-Je nach Anwendungsfall sind verschiedene Methoden, also GUID-Versionen, besser geeignet.
-
-
-\subsection{Format}
-\label{sec:guid:format}
-
-Das genaue Format einer GUID ist von ihrer Version abhängig.
-Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} angegeben sind.
+\subsection{Darstellung}
+Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
 
 \begin{table}[ht]
     \caption{Aufbau einer GUID der Version 1}
@@ -48,7 +45,7 @@ Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in
     \end{center}
 \end{table}
 
-Diese Gruppierung basiert auf den Feldern der ersten, Timestamp-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig ist.\cite{uuid-rfc}
+Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}
 Die einzelnen Oktette (Bytes) werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
 Eine GUID könnte also zum Beispiel wie folgt aussehen:
 
