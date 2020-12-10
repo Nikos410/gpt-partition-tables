@@ -1,14 +1,10 @@
 \section{Einleitung}
-Die Speicherung von Daten auf einem Datenträger kann auf zahlreiche unterschiedliche Varianten realisiert werden.
-Verschiedene Dateisysteme ordnen die gleichen Daten unterschiedlich auf einem Datenträger an.
-Beispielsweise unterteilt das Dateisystem \textit{ext2} Dateien in Blöcke und verwaltet diese mit sogenannten \textit{inodes}, wohingegen bei \textit{Btrfs} die Blöcke anhand einer Baumstruktur organisiert werden. 
-Jede Speicherungsmethode hat Vor- und Nachteile in verschiedenen Anwendungsfällen, weshalb es nützlich sein kann, mehrere verschiedene Dateisysteme auf einem Datenträger zu betreiben.
-Dazu wird ein Datenträger in Bereiche unterteilt, die "Partitionen" genannt werden.
-Aber auch aus vielen weiteren Gründen kann es hilfreich sein, einen Datenträger in verschiedene Partitionen zu unterteilen.
+Seit den Anfängen der elektronischen Datenverarbeitung ist die Speicherung von Daten ein wichtiges Thema, daher ist es kaum verwunderlich, dass die Technologie in diesem Bereich über die Jahre rasante Fortschritte erfahren.
 
-Damit ein Computersystem die Daten auf einem Datenträger sinnvoll lesen kann, muss eindeutig sein, wie diese gespeichert sind.
-Dafür werden Partitionstabellen verwendet, die speichern, welche Partitionen auf einem Datenträger vorliegen.
+Eine Technologie, die seit den 1980er Jahren immer an Bedeuting gewann und sich zu einem De-Facto-Standard etabliert hat, ist der \textit{Master Boot Record} (MBR), bei dem es sich um ein Format von Partitionstabellen handelt.
+Dieser Standard musste allerdings über die Jahre oft angepasst werden, um mit den neuen Anforderungen mitzuhalten.
 
-Ein Standard, der seit den 1980er-Jahren verwendet wird, ist der "Master Boot Record" (MBR).
-Dieser besitzt allerdings einige technische Limitationen\footnote{Vgl. Abschnitt \ref{sec:gpt_advantages}}, weshalb eine neue Spezifikation mit dem Namen "GUID Partition Table" (GPT) entwickelt wurde.\cite{drive-partition-limits}
-Diese Spezifikation wird in dieser Ausarbeitung genauer erläutert.
+Da dies immer mehr zu Kompatibilitätsproblemen führte, wurde Anfang der 2000er Jahre der Standard \textit{GUID Partition Table} (GPT) entwickelt, welcher erweiterbar aufgebaut ist, um einfach an zukünftige Anforderungen angepasst werden zu können.
+
+Dieser Standard wird in dieser Ausarbeitung genauer behandelt.
+Zunächst werden allerdings einige grundlegende Konzepte erläutert, die für das Verständnis wichtig sind.

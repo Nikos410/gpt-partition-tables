@@ -1,4 +1,5 @@
-\section{Adressierung}
+\section{Datenträger-Adressierung}
+\label{sec:addressing}
 In Partionstabellen sind, unter anderem, Start und Ende der einzelnen Partitionen gespeichert.
 Dafür wird eine Nomenklatur benötigt, um die Bereiche auf dem physischen Datenträger zu adressieren.
 
@@ -13,15 +14,19 @@ Durch Kombination von Lesekopf, Sektor und Zylinder / Spur (vgl. Abbildung \ref{
     \label{fig:chs}
 \end{figure}
 
-In modernen Festplatten werden allerdings oft komplexere Geometrien zur Anordnung der Daten verwendet, als von CHS vorgesehen sind.
+\subsubsection{Probleme}
+In modernen Festplatten werden oft komplexere Geometrien zur Anordnung der Daten verwendet, als von CHS vorgesehen sind.
 Diese Geometrien werden in diesen Fällen meist von einem Festplatten-Controller, welcher den tatsächlichen Aufbau der Festplatte kennt, in CHS-Werte übersetzt, um die Daten zu adressieren.\cite{pollard2011}
 Außerdem sind modernere Datenträger, wie zum Beispiel Flash-Speicher in SSDs, grundlegend anders aufgebaut als klassische Festplatten.
 
 Daher entspricht die CHS-Adressierung heutzutage nur noch in den seltensten Fällen dem tatsächlichen physischen Aufbau eines Datenträgers. 
-Mittlerweile wird CHS als obsolet angesehen und durch LBA\footnote{Siehe Abschnitt \ref{sec:LBA}} ersetzt.
+Mittlerweile wird CHS als obsolet angesehen und durch LBA ersetzt.
 
 
 \subsection{Logical Block Addressing}
-\label{sec:LBA}
-Bei dem Verfahren "Logical Block Addressing" (LBA) werden die Daten auf einem Datenträge in 512 Byte große Blöcke (Sektoren) unterteilt, die aufsteigend nummeriert werden.
+\label{sec:addressing:lba}
+Bei dem Verfahren "Logical Block Addressing" (LBA) werden die Daten auf einem Datenträger in 512 Byte große Blöcke (Sektoren) unterteilt, die beginnend mit 0 aufsteigend nummeriert werden.
 Der Controller des Datenträgers, der die genaue Geometrie kennt, übersetzt die Block-Nummer dann in den physischen Speicherort der Daten.
+
+LBA-Block-Nummern werden häufig im Format \textit{LBA x} angegeben, wobei \textit{x} die Block-Nummer ist.
+Damit würde der Anfang eines Datenträgers als LBA 0 bezeichnet werden.

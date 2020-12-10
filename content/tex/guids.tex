@@ -1,15 +1,18 @@
-\section{UUID}
+\section{GUIDs}
 
-Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (\textbf{G}lobally \textbf{U}nique \textbf{ID}entifier), beispielsweise um Partitionen eindeutig zu identifizieren.
-Diese sind allgemeiner als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt. 
+Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (Globally Unique Identifier), beispielsweise um Partitionen eindeutig zu identifizieren.
+Dabei handelt es sich um 128 Bit große Zahlen, die verwendet werden können, um Informationen eindeutig zu identifizieren.
 
-Dabei handelt es sich um 128 Bit große Zahlen, die auch ohne zentrale Registrierungsstelle als praktisch eindeutig angesehen werden können.
+GUIDs sind allgemeiner als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt, in dieser Ausarbeitung wird allerdings die Bezeichnung GUID verwendet, um konsistent mit GPT zu sein.
+
+\subsection{Motivation}
+
 
 \subsection{Varianten und Versionen}
 \label{sec:guid:variants}
 
-Die "Variante" einer UUID spezifiziert Informationen über dessen Aufbau.
-Welche Variante vorliegt ist dem neunten Oktett (Byte) einer UUID zu entnehmen.
+Die "Variante" einer GUID spezifiziert Informationen über dessen Aufbau.
+Welche Variante vorliegt ist dem neunten Oktett (Byte) einer GUID zu entnehmen.
 Abhängig von den Werten der drei höchstwertigsten Bits kann zwischen 4 Varianten unterschieden werden.
 
 Dabei ist eine Variante für zukünftige Nutzung reserviert und zwei weitere werden für Abwärtskompatibilität zu älteren Formaten verwendet. 
@@ -18,18 +21,18 @@ Die vierte Variante wird im weiteren genauer beschrieben.
 Für diese Variante wird zwischen fünf "Versionen" unterschieden.
 Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts zu erkennen.
 
-Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine UUID generiert werden kann.
-Je nach Anwendungsfall sind verschiedene Methoden, also UUID-Versionen, besser geeignet.
+Diese Versionen unterscheiden zwischen verschiedenen Methoden, durch die eine GUID generiert werden kann.
+Je nach Anwendungsfall sind verschiedene Methoden, also GUID-Versionen, besser geeignet.
 
 
 \subsection{Format}
 \label{sec:guid:format}
 
-Das genaue Format einer UUID ist von ihrer Version abhängig.
-Bei einer Darstellung in Textform wird eine UUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} angegeben sind.
+Das genaue Format einer GUID ist von ihrer Version abhängig.
+Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} angegeben sind.
 
 \begin{table}[ht]
-    \caption{Aufbau einer UUID der Version 1}
+    \caption{Aufbau einer GUID der Version 1}
     \label{tbl:guid_layout}
 
     \begin{center}
@@ -47,7 +50,7 @@ Bei einer Darstellung in Textform wird eine UUID in 5 Gruppen unterteilt, die in
 
 Diese Gruppierung basiert auf den Feldern der ersten, Timestamp-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig ist.\cite{uuid-rfc}
 Die einzelnen Oktette (Bytes) werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
-Eine UUID könnte also zum Beispiel wie folgt aussehen:
+Eine GUID könnte also zum Beispiel wie folgt aussehen:
 
 \begin{center}
     \texttt{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}
