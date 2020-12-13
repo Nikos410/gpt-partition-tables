@@ -1,6 +1,7 @@
 \section{GUID Partition Table}
-\label{sec:structure}
+\label{sec:gpt}
 In diesem Abschnitt wird der Standard \textit{GUID Partition Table} (GPT) detailliert beschrieben.
+Außerdem werden an relevanten Stellen Vorteile gegenüber dem MBR-Verfahren aufgezeigt.
 
 Im Zuge dieser Ausarbeitung wurde außerdem eine Anwendung entwickelt, um Partitions-Informationen aus einem Datenträger, der nach dem GPT-Verfahren partitioniert ist, auszulesen.
 Der komplette Quellcode ist im Github-Repository \textit{Nikos410/simple-gpt-reader}\footnote{\url{https://github.com/Nikos410/simple-gpt-reader}} zu finden.
@@ -8,6 +9,8 @@ Diese Anwendung wird im folgenden als \textit{simple-gpt-reader} bezeichnet.
 
 
 \subsection{Aufbau}
+\label{sec:gpt:structure}
+
 Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partioniert ist, werden im folgenden genauer erläutert.
 Diese Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
 
@@ -81,6 +84,8 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Es wird diese Anzahl Bytes ab dem Anfang des Headers verwendet.
     Bei der Berechnung wird dieses Feld auf 0 gesetzt, damit der Wert dieses Feldes keinen Einfluss auf die Checksumme hat.
 
+    Dies dient dazu, die Integrität (Vollständigkeit und Korrektheit) der Daten sicherzustellen. 
+
     \item \textbf{reserved}:
     Dieses Feld wird nicht verwendet und muss den Wert 0 besitzen. Zukünftige Revisionen können dieses Feld verwenden.
 
@@ -144,8 +149,17 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
     Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
 
+    Anhand dieses Feldes kann auch erkannt werden, ob dieser Eintrag im Partitions-Array in Verwendung oder leer ist.
+    Eine leere GUID\footnote{
+        Eine "leere" GUID entspricht dem Wert 0 (\texttt{00000000-0000-0000-0000-000000000000})
+    } bedeutet, dass dieser Eintrag leer ist, also keine Partition beschreibt.
+    Ein Eintrag, der in Verwendung ist, also eine Partition auf dem Datenträger beschreibt, muss auch eine nicht leere GUID besitzen.
+
     \item \textbf{uniquePartitionGuid}:
     Eine GUID, die diesen Partitions-Eintrag eindeutig identifiziert.
+    
+    Dies ist ein klarer Vorteil gegenüber dem MBR-Verfahren, bei dem Partitionen meist durch ihre Position auf dem Datenträger identifiziert werden (beispielsweise "Partition 2").
+    Dort kann es zu Problemen kommen, wenn beispielsweise die erste Partition auf einem Datenträer in 2 Partitionen aufgeteilt wird.Dadurch erhöht sich entsprechend auch die Partitions-"Nummer" der darauf folgenden Partitionen (beispielsweise wird Partition 2 zu Partition 3).
 
     \item \textbf{startingLba}:
     Der erste Block dieser Partition.
@@ -154,56 +168,91 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Der letzte Block dieser Partition.
 
     \item \textbf{attributes}:
+    Die einzelnen Bits dieses Feldes entsprechen verschiedenen Attributen.
+    Diese Attribute sind für die Partitionierung selbst nicht relevant, sondern spezifizieren vor Allem, wie das Betriebssystem / die Firmware eines Computers mit dieser Partition interagieren muss / darf.
+    Aus diesem Grund wird die Bedeutung der einzelnen Bits hier nicht weiter ausgeführt, da dies auch den Rahmen dieser Ausarbeitung sprengen würde.
     
     \item \textbf{partitionName}:
     Null-terminierter String, der einen Namen der Partition beinhaltet.
-    Dieser Name muss nicht dem Namen des Dateisystems, das sich in dieser Partition befindet, entsprechen.
+    Dieser Name muss nicht dem Namen des Dateisystems, das sich ggf. in dieser Partition befindet, entsprechen.
 
 \end{itemize}
 
 Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags den Wert 0 besitzen und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
 
 \subsection{Bootloader}
+\label{sec:gpt:bootloader}
 
+Neben den Partitions-Informationen beinhalten Partitionstabellen üblicherweise auch den sogenannten Bootloader.
+Dabei handelt es sich um den Code, der ausgeführt wird, wenn ein Computersystem von diesem Datenträger starten soll.
+
+Anders als bei anderen Verfahren besitzt GPT eine spezielle Systempartition, die den Boot-loader-Code beinhaltet.
+In dieser Partition können mehrere Einträge hinzugefügt werden, was Multiboot-Systeme (Systeme, die verschiedene Betriebssyteme starten können) deutlich einfacher und vor Allem robuster macht.\cite{heise-mbr-gpt}
+Bei einem Datenträger, der kein startbares Betriebssytem beinhaltet, fehlt diese Partition.
+
+Dieser Partitions-Typ besitzt eine fest definierte GUID im Feld \textit{partitionTypeGuid}.
+Firmware, die den GPT-Standard unterstützt, muss diese GUID kennen und den Bootloader-Code in dieser Partition ausführen.
+
+Auch dieses Verfahren verbessert die Erweiterbarkeit des GPT-Standards, da die Größe dieser Partition flexibel an die Länge des Bootloader-Codes angepasst werden kann.
+
+\subsection{Limits}
+
+\subsubsection{Maximale Größe eines Datenträgers}
+\label{sec:gpt:limits:max-partition-size}
+
+GPT verwendet 64 Bit große Datenstrukturen, um die LBA-Block-Nummern von Anfang und Ende der einzelnen Partitionen zu speichern.
+Die üblicherweise verwendete Block-Größe beträgt 512 Bytes, wodurch sich eine maximale verwendbare Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.
+
+MBR hingegen verwendet 32 Bit große Datenstrukturen, wodurch sich eine maximale adressierbare Größe von $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $ ergibt.
+
+In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann, wenn er nach dem MBR-Verfahren partitioniert ist.
+Da MBR allerdings nicht die Block-Nummer des letzten Blockes einer Partition, sondern dessen Länge in Blöcken speichert, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
+Um dies zu erreichen, kann eine 2TiB große Partition angelegt werden, dessen Startblock sich an der größten möglichen LBA-Adresse befindet.
+Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, die intern Block-Nummern verwalten können, die größer als 32 Bit sind.
+Diese Betriebssysteme können meist auch das GPT verwenden, weshalb dieses Verfahren in der Praxis selten angewendet wird.\cite{mbr-4tb-workaround}
+
+Für heutige Datenträger sind oft weder 2TiB noch 4TiB ausreichend, weshalb die maximale Kapazität häufig das ausschlaggebenste Kriterium für die Verwendung von GPT ist.
+
+\subsubsection{Maximale Anzahl Partitionen}
+\label{sec:gpt:limits:max-partition-count}
+
+GPT verwendet 32 Bits um die Anzahl der Partitionen auf einem Datenträger zu speichern (\textit{numberOfPartitionEntries}), was bedeutet dass maximal $ 2^{32} $ Partitionen verwaltet werden können.
+Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux maximal 256 Partionen und unter Windows 128 Partitionen auf einem Datenträger verwendet werden.
+
+MBR hingegen kann maximal vier (primäre) Partitionen verwalten.
+Um dieses Limit zu erhöhen können in einer primären Partition weitere logische Partitionen angelegt werden.
 
 \subsection{Vorteile gegenüber MBR}
 \label{sec:gpt:advantages}
 
+In den vorherigen Abschnitten wurden viele Vorteile erläutert, die GPT gegenüber MBR besitzt.
+Diese Vorteile werden an dieser Stelle noch einmal gesammelt aufgeführt.
+
 \begin{itemize}
-    \item \textbf{Eindeutige Identifizierung von Partitionen:} 
-    GPT versieht jede Partition mit einer GUID, um sie eindeutig identifizieren zu können.
-    Bei GPT werden Partitionen durch ihre Partition auf dem Datenträger identifiziert (beispielsweise "Partition 2").
-    Dies kann zu Problemen führen. 
-    Wenn beispielsweise die erste Partition auf einem Datenträer in 2 Partitionen aufgeteilt wird, erhöht sich auch die Partitions-"Nummer" der darauf folgenden Partitionen (beispielsweise wird Partition 2 zu Partition 3).
-
     \item \textbf{Maximale Größe von Partitionen:}
-    MBR speichert die LBA-Adresse des ersten Blocks und die Länge einer Partition mit 32 Bit großen Integer-Werten.
-    Bei 512 Byte großen Blöcken ergibt sich so eine maximale Partitionsgröße von $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $.
-
-    In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann.
-    Da MBR (bei LBA-Adressierung) zusätzlich zur Block-Nummer des letzten Blockes einer Partition auch dessen Länge in Blöcken speichert, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
-    Um dies zu erreichen, kann eine 2TiB große Partition angelegt werden, dessen Startblock sich an der größten möglichen LBA-Adresse befindet.
-    Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, die intern Block-Nummern verwalten können, die größer als 32 Bit sind.
-    Diese Betriebssysteme können meist auch das GPT verwenden, weshalb dieses Verfahren in der Praxis selten angewendet wird.\cite{mbr-4tb-workaround}
-
-    Für heutige Datenträger sind oft weder 2TiB noch 4TiB ausreichend.
-    GPT verwendet stattdessen 64 Bit große Datenstrukturen um Anfang und Ende einer Partition zu speichern, wodurch sich bei 512 Byte großen Blöcken eine maximale Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.
-
-    \small
-    \textit{
-    TODO: Evtl. hier noch sagen, dass diese Limits voraussichtlich für die Zukunft ausreichend sind.
-    Da müsste ich mir noch überlegen auf welcher Datengrundlage ich das Begründe.
-    Ne Idee wäre diese Grafik zu verwenden: \url{https://upload.wikimedia.org/wikipedia/commons/9/90/Hard_drive_capacity_over_time.svg}
-    Ist aber ne logarithmische Skala, das hochzurechnen wann das 144 PB erreicht wird frickelig.
-    }
+    GPT verwendet 64 Bit große Datenstrukturen, um LBA-Block-Nummern zu speichern, MBR 32 Bit.
+    Dadurch ergeben sich nutzbare Größen von 8ZiB gegenüber 2TiB. 
+    (Vgl. Abschnitt \ref{sec:gpt:limits:max-partition-size})
 
     \item \textbf{Maximale Anzahl von Partitionen:}
-    Während MBR nur 4 primäre Partitionen unterstützt, kann GPT $ 2^{32} $ Partitionen verwalten.
-    Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux maximal 256 Partionen und unter Windows 128 Partitionen auf einem Datenträger verwendet werden.
+    GPT kann $ 2^{32} $, MBR nur 4 primäre Partitionen verwalten. 
+    (Vgl. Abschnitt \ref{sec:gpt:limits:max-partition-count})
 
-    \item \textbf{Erweiterbarkeit:} Version und Größe der Datenstrukturen werden in der Partitionstabelle gespeichert, um zukünftige Erweiterungen vornehmen zu können.
+    \item \textbf{Erweiterbarkeit:}
+    Die von GPT verwendeten Datenstrukturen sind so konzeptioniert, dass in Zukunft einfach Erweiterungen vorgenommen werden können.
+    Beispielsweise werden Revision und Größe der Datenstrukturen in der Partitionstabelle gespeichert. (Vgl. Abschnitt \ref{sec:gpt:structure})
 
-    \item \textbf{Datensicherheit:} GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers.
-    Außerdem werden CRC32 Checksummen verwendet um die Integrität der Daten sicherzustellen.
+    \item \textbf{Datensicherheit:} 
+    GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers.
+    (Vgl. Abschnitt \ref{sec:gpt:structure})
+    
+    \item \textbf{Datenintegrität:}
+    GPT verwendet CRC32 Checksummen, um die Integrität der Daten sicherzustellen.
+    (Vgl. Abschnitt \ref{sec:gpt:structure})
+
+    \item \textbf{Bootloader:} 
+    GPT besitzt eine spezielle Systempartition, die den Bootloader-Code beinhaltet.
+    Dadurch wird die Verwaltung des Bootloader-Codes vereinfacht.
+    (Vgl. Abschnitt \ref{sec:gpt:bootloader})
 
 \end{itemize}

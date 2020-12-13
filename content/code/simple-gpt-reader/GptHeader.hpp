@@ -10,7 +10,6 @@ public:
     uint64_t alternateLba;
     uint64_t firstUsableLba;
     uint64_t lastUsableLba;
-    // 16 bytes
     UUID diskGuid;
     uint64_t partitionEntryLba;
     uint32_t numberOfPartitionEntries;
