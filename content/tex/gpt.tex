@@ -46,7 +46,7 @@ Im letzten Block eines Datenträgers befindet sich ein zweiter Header, um durch 
 Der Header in LBA 1 wird dabei als \textit{primärer}, der Header am Ende als \textit{backup} Header bezeichnet.
 
 In Abbildung \ref{fig:GptHeader.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um den Header abzubilden.
-Die Bedeutung und der Zweck der einzelnen Felder werden im folgenden genauer erläutert.
+Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
 \begin{figure}[ht]
     \inputminted[baselinestretch=1.2, linenos, tabsize=4, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptHeader.hpp}
@@ -93,9 +93,6 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im folgenden genauer erl
 
     \item \textbf{firstUsableLba}:
     Der erste Block, der für eine Partition verwendet werden kann.
-    Für gewöhnlich der erste Block nach dem Partitions-Array\footnote{
-        vgl. Abschnitt \ref{sec:gpt:structure:entry-array}
-    }.
 
     \item \textbf{lastUsableLba}:
     Der letzte Block, der für eine Partition verwendet werden kann.
@@ -105,7 +102,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im folgenden genauer erl
     Diese GUID wird beim Anlegen einer GPR-Partitionstabelle erstellt, daher kann nur die Partitionstabelle eindeutig identifiziert werden, weshalb die Bezeichnung \textit{diskGuid} irreführend ist.
 
     \item \textbf{partitionEntryLba}:
-    Der erste Block des Partitions-Arrays.
+    Der erste Block des Partitions-Arrays. (vgl. Abschnitt \ref{sec:gpt:structure:entry-array})
 
     \item \textbf{numberOfPartitionEntries}:
     Die Anzahl der Einträge im Partitions-Array.
@@ -124,7 +121,45 @@ Der Rest des Blocks muss den Wert 0 besitzen.
 
 \subsubsection{Partitions-Array}
 \label{sec:gpt:structure:entry-array}
+Im Partitions-Array werden die Informationen zu den einzelnen Partitionen gespeichert.
+Auch von dieser Datenstruktur gibt es eine primäre und ein Backup.
+Der primäre Header verweist im Feld \textit{partitionEntryLba} auf das primären Partitions-Array, der Backup-Header auf das Backup-Partitions-Array.
 
+In Abbildung \ref{fig:GptPartitionEntry.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um ein Element im Partitions-Array abzubilden.
+Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
+
+\begin{figure}[ht]
+    \inputminted[baselinestretch=1.2, linenos, tabsize=4, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptPartitionEntry.hpp}
+    
+    \caption{simple-gpt-reader/GptPartitionEntry.hpp (Auszug)}
+    \label{fig:GptPartitionEntry.hpp}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{partitionTypeGuid}:
+    Eine GUID, die den Partitions-Typen angibt.
+    Damit ist nicht das verwendete Dateisystem gemeint, sondern der Verwendungszweck der Partition.
+    Beispielsweise verwendet Linux GUIDs um zwischen einfache nDaten-Partitionen, RAID-Partitionen oder Swap-Partitionen(Auslagerungsspeicher) zu unterscheiden.
+    
+    Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
+    Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
+
+    \item \textbf{uniquePartitionGuid}:
+    Eine GUID, die diesen Partitions-Eintrag eindeutig identifiziert.
+
+    \item \textbf{startingLba}:
+    Der erste Block dieser Partition.
+
+    \item \textbf{endingLba}:
+    Der letzte Block dieser Partition.
+
+    \item \textbf{attributes}:
+    
+    \item \textbf{partitionName}:
+
+\end{itemize}
+
+Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags 0 sein und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
 
 \subsection{Bootloader}
 
