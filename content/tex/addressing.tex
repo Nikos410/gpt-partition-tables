@@ -1,16 +1,17 @@
 \section{Datenträger-Adressierung}
 \label{sec:addressing}
-In Partionstabellen ist unter Anderem gespeichert, in welchen Bereichen eines Datenträgers sich welche Partitionen befinden.
+In Partionstabellen wird unter Anderem gespeichert, in welchen Bereichen eines Datenträgers sich welche Partitionen befinden.
 Um diese Bereiche zu adressieren, wird eine Nomenklatur benötigt.
+Im Folgenden werden die Verfahren \textit{Cylinder-Head-Sector} und \textit{Logical Block Addressin} erläutert.
 
 \subsection{Cylinder-Head-Sector}
-Das Verfahren "Cylinder-Head-Sector" (CHS) orientiert sich am physischen Aufbau von Festplatten.
+Das Verfahren Cylinder-Head-Sector (CHS) orientiert sich am physischen Aufbau von Festplatten.
 Durch Kombination von Lesekopf, Sektor und Zylinder / Spur (vgl. Abbildung \ref{fig:chs}) entsteht sozusagen ein dreidimensionales Koordinatensystem, in dem eine Position auf einem Datenträger eindeutig identifiziert werden kann.
 
 \begin{figure}[ht]
     \centering
     \fbox{\includesvg{content/graphics/CHS}}
-    \caption{Adressierung eines Datenträgers nach dem CHS-Verfahren}
+    \caption{Adressierung eines Datenträgers nach dem CHS-Verfahren. (Quelle: Wikimedia Commons)}
     \label{fig:chs}
 \end{figure}
 
@@ -25,7 +26,7 @@ Mittlerweile wird CHS als obsolet angesehen und durch LBA ersetzt.
 
 \subsection{Logical Block Addressing}
 \label{sec:addressing:lba}
-Bei dem Verfahren "Logical Block Addressing" (LBA) werden die Daten auf einem Datenträger in 512 Byte große Blöcke (Sektoren) unterteilt, die beginnend mit 0 aufsteigend nummeriert werden.
+Bei dem Verfahren Logical Block Addressing (LBA) werden die Daten auf einem Datenträger in 512 Byte große Blöcke (Sektoren) unterteilt, die beginnend mit 0 aufsteigend nummeriert werden.
 Der Controller des Datenträgers, der die genaue Geometrie kennt, übersetzt eine Block-Nummer dann in den physischen Speicherort der Daten.
 Bei einer herkömmlichen Festplatte beispielsweise in die entsprechende CHS-Adresse, an der die Daten gespeichert sind.
 
