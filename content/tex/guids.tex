@@ -1,6 +1,6 @@
 \section{GUIDs}
 
-Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (Globally Unique Identifier), beispielsweise um Partitionen eindeutig zu identifizieren.
+Wie der Name vermuten lässt, verwendet GPT \textit{GUID}s (Globally Unique Identifier), beispielsweise um Partitionen zu identifizieren.
 Dabei handelt es sich um 128 Bit große Zahlen, die verwendet werden können, um Informationen eindeutig zu identifizieren.
 
 GUIDs sind allgemeiner als \textit{UUID}s (\textbf{U}niversally \textbf{U}nique \textbf{ID}entifier) bekannt, in dieser Ausarbeitung wird allerdings die Bezeichnung GUID verwendet, um konsistent mit GPT zu sein.
@@ -29,9 +29,6 @@ Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während ei
 Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
 
 \begin{table}[ht]
-    \caption{Aufbau einer GUID der Version 1}
-    \label{tbl:guid_layout}
-
     \begin{center}
         \begin{tabular}{|l|l|}
         \hline
@@ -43,6 +40,9 @@ Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in
         \texttt{node}                                                                                         & 6                        \\ \hline
         \end{tabular}
     \end{center}
+    
+    \caption{Aufbau einer GUID der Version 1}
+    \label{tbl:guid_layout}
 \end{table}
 
 Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}

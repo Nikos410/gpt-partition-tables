@@ -11,8 +11,8 @@ Diese Anwendung wird im folgenden als \textit{simple-gpt-reader} bezeichnet.
 \subsection{Aufbau}
 \label{sec:gpt:structure}
 
-Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partioniert ist, werden im folgenden genauer erläutert.
-Diese Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
+Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partitioniert ist, werden im folgenden genauer erläutert.
+Die Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
 
 \begin{figure}[ht]
     \includegraphics[width=\textwidth]{content/graphics/GPT_Layout.png}
@@ -32,7 +32,7 @@ Dadurch muss in den zuvor erwähnten Systemen meist ein Nutzer zunächst diese P
 Da so die GPT-Partitionsdaten sozusagen "geschützt" werden, wird dieser MBR als \textit{Protective MBR} bezeichnet.
 Für die Funktion von GPT hat der Protective MBR ansonsten keine Bedeutung.
 
-In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Protective MBR grafisch dargestellt.
+In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Protective MBR dargestellt.
 
 \begin{figure}[ht]
     \includegraphics[width=\textwidth]{content/graphics/GPT_Layout_with_protective_MBR.png}
@@ -46,7 +46,7 @@ In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Pro
 In LBA 1 befindet sich der sogenannte \textit{GPT Header}.
 Dieser Header beinhaltet allgemeine Informationen über den Datenträger.
 Im letzten Block eines Datenträgers befindet sich ein zweiter Header, um durch Redundanz Datenverlust vorzubeugen.
-Der Header in LBA 1 wird dabei als \textit{primärer}, der Header am Ende als \textit{backup} Header bezeichnet.
+Der Header in LBA 1 wird dabei als \textit{primärer}, der Header am Ende als \textit{Backup}-Header bezeichnet.
 
 In Abbildung \ref{fig:GptHeader.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um den Header abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
@@ -84,7 +84,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Es wird diese Anzahl Bytes ab dem Anfang des Headers verwendet.
     Bei der Berechnung wird dieses Feld auf 0 gesetzt, damit der Wert dieses Feldes keinen Einfluss auf die Checksumme hat.
 
-    Dies dient dazu, die Integrität (Vollständigkeit und Korrektheit) der Daten sicherzustellen. 
+    Dies dient dazu, die Integrität der Daten sicherzustellen. 
 
     \item \textbf{reserved}:
     Dieses Feld wird nicht verwendet und muss den Wert 0 besitzen. Zukünftige Revisionen können dieses Feld verwenden.
@@ -94,20 +94,21 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
     \item \textbf{alternateLba}:
     Der Block, in dem sich der andere Header befindet.
-    Beim primären Header besitzt beinhaltet Feld die Block-Nummer des Backup-Headers, beim Backup-Header die Block-Nummer des primären Headers.
+    Beim primären Header verweist dieses Feld auf den Backup-Headers, beim Backup-Header verweist es auf den primären Header.
 
     \item \textbf{firstUsableLba}:
     Der erste Block, der für eine Partition verwendet werden kann.
+    Üblicherweise ist dies der erste Block nach dem Partitions-Array. (vgl. Abschnitt \ref{sec:gpt:structure:entry-array})
 
     \item \textbf{lastUsableLba}:
     Der letzte Block, der für eine Partition verwendet werden kann.
 
     \item \textbf{diskGuid}:
     Eine GUID, die verwendet werden kann, um den Datenträger eindeutig zu identifizieren.\cite{uefi-spec}
-    Diese GUID wird beim Anlegen einer GPR-Partitionstabelle erstellt, daher kann nur die Partitionstabelle eindeutig identifiziert werden, weshalb die Bezeichnung \textit{diskGuid} irreführend ist.
+    Diese GUID wird beim Anlegen einer GPR-Partitionstabelle erstellt, daher kann eigentlich nur die Partitionstabelle eindeutig identifiziert werden, weshalb die Bezeichnung \textit{diskGuid} irreführend ist.
 
     \item \textbf{partitionEntryLba}:
-    Der erste Block des Partitions-Arrays. (vgl. Abschnitt \ref{sec:gpt:structure:entry-array})
+    Der erste Block des Partitions-Arrays. 
 
     \item \textbf{numberOfPartitionEntries}:
     Die Anzahl der Einträge im Partitions-Array.
@@ -122,7 +123,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     
 \end{itemize}
 
-Der Rest des Blocks muss den Wert 0 besitzen.
+Der Rest des LBA-Blocks, in dem sich der Header befindet, muss den Wert 0 besitzen.
 
 \subsubsection{Partitions-Array}
 \label{sec:gpt:structure:entry-array}
@@ -130,6 +131,7 @@ Im Partitions-Array werden die Informationen zu den einzelnen Partitionen gespei
 Auch von dieser Datenstruktur gibt es eine primäre und ein Backup.
 Der primäre Header verweist im Feld \textit{partitionEntryLba} auf das primären Partitions-Array, der Backup-Header auf das Backup-Partitions-Array.
 
+\newpage
 In Abbildung \ref{fig:GptPartitionEntry.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um ein Element im Partitions-Array abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
@@ -142,9 +144,9 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
 \begin{itemize}
     \item \textbf{partitionTypeGuid}:
-    Eine GUID, die den Partitions-Typen angibt.
+    Eine GUID, die den Partitions-Typen identifiziert.
     Damit ist nicht das verwendete Dateisystem gemeint, sondern der Verwendungszweck der Partition.
-    Beispielsweise verwendet Linux GUIDs um zwischen einfache nDaten-Partitionen, RAID-Partitionen oder Swap-Partitionen(Auslagerungsspeicher) zu unterscheiden.
+    Beispielsweise verwendet Linux GUIDs um zwischen einfachen Daten-Partitionen, RAID-Partitionen oder Swap-Partitionen (Auslagerungsspeicher) zu unterscheiden.
     
     Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
     Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
@@ -153,23 +155,27 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Eine leere GUID\footnote{
         Eine "leere" GUID entspricht dem Wert 0 (\texttt{00000000-0000-0000-0000-000000000000})
     } bedeutet, dass dieser Eintrag leer ist, also keine Partition beschreibt.
-    Ein Eintrag, der in Verwendung ist, also eine Partition auf dem Datenträger beschreibt, muss auch eine nicht leere GUID besitzen.
+    Ein Eintrag, der in Verwendung ist, also eine Partition auf dem Datenträger beschreibt, muss in diesem Feld eine nicht leere GUID besitzen.
 
     \item \textbf{uniquePartitionGuid}:
     Eine GUID, die diesen Partitions-Eintrag eindeutig identifiziert.
     
     Dies ist ein klarer Vorteil gegenüber dem MBR-Verfahren, bei dem Partitionen meist durch ihre Position auf dem Datenträger identifiziert werden (beispielsweise "Partition 2").
-    Dort kann es zu Problemen kommen, wenn beispielsweise die erste Partition auf einem Datenträer in 2 Partitionen aufgeteilt wird.Dadurch erhöht sich entsprechend auch die Partitions-"Nummer" der darauf folgenden Partitionen (beispielsweise wird Partition 2 zu Partition 3).
+    
+    Dort kann es zu Problemen kommen, wenn beispielsweise die erste Partition auf einem Datenträger in 2 Partitionen aufgeteilt wird.
+    In diesem Fall erhöht sich entsprechend auch die Partitions-"Nummer" der darauf folgenden Partitionen (beispielsweise wird Partition 2 zu Partition 3).
+    
+    Die GUID, die von GPT verwendet wird, bleibt hingegen konstant und darf nach dem Anlegen einer Partition nicht mehr verändert werden.
 
     \item \textbf{startingLba}:
-    Der erste Block dieser Partition.
+    Der erste Block der Partition, die von diesem Eintrag beschrieben wird.
 
     \item \textbf{endingLba}:
-    Der letzte Block dieser Partition.
+    Der letzte Block der Partition, die von diesem Eintrag beschrieben wird.
 
     \item \textbf{attributes}:
     Die einzelnen Bits dieses Feldes entsprechen verschiedenen Attributen.
-    Diese Attribute sind für die Partitionierung selbst nicht relevant, sondern spezifizieren vor Allem, wie das Betriebssystem / die Firmware eines Computers mit dieser Partition interagieren muss / darf.
+    Diese Attribute sind für die Partitionierung selbst nicht relevant, sondern spezifizieren vor Allem, wie das Betriebssystem oder die Firmware eines Computers mit dieser Partition interagieren muss.
     Aus diesem Grund wird die Bedeutung der einzelnen Bits hier nicht weiter ausgeführt, da dies auch den Rahmen dieser Ausarbeitung sprengen würde.
     
     \item \textbf{partitionName}:
@@ -183,11 +189,8 @@ Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvo
 \subsection{Bootloader}
 \label{sec:gpt:bootloader}
 
-Neben den Partitions-Informationen beinhalten Partitionstabellen üblicherweise auch den sogenannten Bootloader.
-Dabei handelt es sich um den Code, der ausgeführt wird, wenn ein Computersystem von diesem Datenträger starten soll.
-
 Anders als bei anderen Verfahren besitzt GPT eine spezielle Systempartition, die den Boot-loader-Code beinhaltet.
-In dieser Partition können mehrere Einträge hinzugefügt werden, was Multiboot-Systeme (Systeme, die verschiedene Betriebssyteme starten können) deutlich einfacher und vor Allem robuster macht.\cite{heise-mbr-gpt}
+In dieser Partition können mehrere Einträge hinzugefügt werden, was Multiboot-Systeme deutlich einfacher und vor Allem robuster macht.\cite{heise-mbr-gpt}
 Bei einem Datenträger, der kein startbares Betriebssytem beinhaltet, fehlt diese Partition.
 
 Dieser Partitions-Typ besitzt eine fest definierte GUID im Feld \textit{partitionTypeGuid}.
@@ -195,7 +198,9 @@ Firmware, die den GPT-Standard unterstützt, muss diese GUID kennen und den Boot
 
 Auch dieses Verfahren verbessert die Erweiterbarkeit des GPT-Standards, da die Größe dieser Partition flexibel an die Länge des Bootloader-Codes angepasst werden kann.
 
+\newpage
 \subsection{Limits}
+In diesem Abschnitt werden die Grenzen beschrieben, die der GPT-Standard besitzt.
 
 \subsubsection{Maximale Größe eines Datenträgers}
 \label{sec:gpt:limits:max-partition-size}
@@ -222,6 +227,7 @@ Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beis
 MBR hingegen kann maximal vier (primäre) Partitionen verwalten.
 Um dieses Limit zu erhöhen können in einer primären Partition weitere logische Partitionen angelegt werden.
 
+\newpage
 \subsection{Vorteile gegenüber MBR}
 \label{sec:gpt:advantages}
 
@@ -252,7 +258,7 @@ Diese Vorteile werden an dieser Stelle noch einmal gesammelt aufgeführt.
 
     \item \textbf{Bootloader:} 
     GPT besitzt eine spezielle Systempartition, die den Bootloader-Code beinhaltet.
-    Dadurch wird die Verwaltung des Bootloader-Codes vereinfacht.
+    Dadurch wird die Verwaltung des Bootloader-Codes und die Verwendung von Multiboot-Systemen vereinfacht.
     (Vgl. Abschnitt \ref{sec:gpt:bootloader})
 
 \end{itemize}
