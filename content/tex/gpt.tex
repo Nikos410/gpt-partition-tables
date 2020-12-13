@@ -5,19 +5,24 @@ Außerdem werden an relevanten Stellen Vorteile gegenüber dem MBR-Verfahren auf
 
 Im Zuge dieser Ausarbeitung wurde außerdem eine Anwendung entwickelt, um Partitions-Informationen aus einem Datenträger, der nach dem GPT-Verfahren partitioniert ist, auszulesen.
 Der komplette Quellcode ist im Github-Repository \textit{Nikos410/simple-gpt-reader}\footnote{\url{https://github.com/Nikos410/simple-gpt-reader}} zu finden.
-Diese Anwendung wird im folgenden als \textit{simple-gpt-reader} bezeichnet.
+Diese Anwendung wird im Folgenden als \textit{simple-gpt-reader} bezeichnet.
 
 
 \subsection{Aufbau}
 \label{sec:gpt:structure}
 
-Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partitioniert ist, werden im folgenden genauer erläutert.
+Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partitioniert ist, werden im Folgenden genauer erläutert.
 Die Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
 
 \begin{figure}[ht]
     \includegraphics[width=\textwidth]{content/graphics/GPT_Layout.png}
+
+    \vspace{-0.2cm}
+
     \caption{Datenstrukturen auf einem Datenträger mit GPT-Partitionierung. \cite{uefi-spec}}
     \label{fig:gpt_layout}
+
+    \vspace{1cm}
 \end{figure}
 
 \subsubsection{Protective MBR}
@@ -25,18 +30,20 @@ Viele ältere Betriebssyteme und Programme, die GPT nicht unterstützen, erwarte
 Wenn dieser nicht vorhanden ist, gilt der Datenträger für diese Systeme als nicht oder fehlerhaft partitioniert.
 Damit der Datenträger in diesen Fällen nicht überschrieben wird, sieht GPT in LBA 0 einen MBR vor.
 
-Dieser MBR gibt an, dass der Datenträger eine einzelne Partition beinhaltet, der den ganzen Datenträger umfasst.\footnote{
+Dieser MBR gibt an, dass der Datenträger eine einzelne Partition beinhaltet, die den ganzen Datenträger umfasst.\footnote{
     Bei einem Datenträger, der die maximale von MBR adressierbare Größe überschreitet, beträgt die Größe dieser Partition die maximale Größe, die von MBR adressiert werden kann.
 }
-Dadurch muss in den zuvor erwähnten Systemen meist ein Nutzer zunächst diese Partitionen explizit löschen, bevor der Datenträger neu partitioniert werden kann.
+Dadurch muss in den zuvor erwähnten Systemen üblicherweise ein Nutzer zunächst diese Partitionen explizit löschen, bevor der Datenträger neu partitioniert werden kann.
 Da so die GPT-Partitionsdaten sozusagen "geschützt" werden, wird dieser MBR als \textit{Protective MBR} bezeichnet.
 Für die Funktion von GPT hat der Protective MBR ansonsten keine Bedeutung.
 
 In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Protective MBR dargestellt.
 
-\begin{figure}[ht]
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{content/graphics/GPT_Layout_with_protective_MBR.png}
     
+    \vspace{-0.2cm}
+
     \caption{Datenträger mit Protective MBR. \cite{uefi-spec}}
     \label{fig:protective-mbr}
 \end{figure}
@@ -54,11 +61,12 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 \begin{figure}[ht]
     \inputminted[baselinestretch=1.2, linenos, tabsize=4, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptHeader.hpp}
     
+    \vspace{-0.5cm}
+
     \caption{simple-gpt-reader/GptHeader.hpp (Auszug, eigene Darstellung)}
     \label{fig:GptHeader.hpp}
 \end{figure}
 
-\newpage
 \begin{itemize}
     \item \textbf{signature}: 
     Das erste Feld beinhaltet eine Signatur, um zu erkennen, ob es sich um einen GPT Header handelt.
@@ -68,7 +76,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     besitzen, damit es sich um einen gültigen GPT Header handelt.
 
     \item \textbf{revision}:
-    Damit der GPT-Standard in Zukunft erweitert werden kann, ist hier die Revision gespeichert, an der man erkennen kann, wie die Daten im folgenden aufgebaut sind.
+    Damit der GPT-Standard in Zukunft erweitert werden kann, ist hier die Revision gespeichert, an der man erkennen kann, wie die Daten im Folgenden aufgebaut sind.
     In dieser Ausarbeitung ist die aktuellste\footnote{
         Stand Dezember 2020
     }
@@ -80,11 +88,12 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
     \item \textbf{headerCrc32}:
     Die CRC32-Checksumme des Headers.
+    Dies dient dazu, die Integrität der Daten sicherzustellen.
+
     Die Bytes, die für die Berechnung verwendet werden, ergeben sich aus dem Wert des Feldes \textit{headerSize}.
     Es wird diese Anzahl Bytes ab dem Anfang des Headers verwendet.
     Bei der Berechnung wird dieses Feld auf 0 gesetzt, damit der Wert dieses Feldes keinen Einfluss auf die Checksumme hat.
-
-    Dies dient dazu, die Integrität der Daten sicherzustellen. 
+     
 
     \item \textbf{reserved}:
     Dieses Feld wird nicht verwendet und muss den Wert 0 besitzen. Zukünftige Revisionen können dieses Feld verwenden.
@@ -94,7 +103,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
     \item \textbf{alternateLba}:
     Der Block, in dem sich der andere Header befindet.
-    Beim primären Header verweist dieses Feld auf den Backup-Headers, beim Backup-Header verweist es auf den primären Header.
+    Beim primären Header verweist dieses Feld auf den Backup-Header, beim Backup-Header auf den primären Header.
 
     \item \textbf{firstUsableLba}:
     Der erste Block, der für eine Partition verwendet werden kann.
@@ -131,13 +140,14 @@ Im Partitions-Array werden die Informationen zu den einzelnen Partitionen gespei
 Auch von dieser Datenstruktur gibt es eine primäre und ein Backup.
 Der primäre Header verweist im Feld \textit{partitionEntryLba} auf das primären Partitions-Array, der Backup-Header auf das Backup-Partitions-Array.
 
-\newpage
 In Abbildung \ref{fig:GptPartitionEntry.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um ein Element im Partitions-Array abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
 \begin{figure}[ht]
     \inputminted[baselinestretch=1.2, linenos, tabsize=4, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptPartitionEntry.hpp}
     
+    \vspace{-0.5cm}
+
     \caption{simple-gpt-reader/GptPartitionEntry.hpp (Auszug, eigene Darstellung)}
     \label{fig:GptPartitionEntry.hpp}
 \end{figure}
@@ -146,15 +156,15 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \item \textbf{partitionTypeGuid}:
     Eine GUID, die den Partitions-Typen identifiziert.
     Damit ist nicht das verwendete Dateisystem gemeint, sondern der Verwendungszweck der Partition.
-    Beispielsweise verwendet Linux GUIDs um zwischen einfachen Daten-Partitionen, RAID-Partitionen oder Swap-Partitionen (Auslagerungsspeicher) zu unterscheiden.
+    Beispielsweise verwendet Linux GUIDs, um zwischen einfachen Daten-Partitionen, RAID-Partitionen oder Swap-Partitionen (Auslagerungsspeicher) zu unterscheiden.
     
     Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
     Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
 
     Anhand dieses Feldes kann auch erkannt werden, ob dieser Eintrag im Partitions-Array in Verwendung oder leer ist.
     Eine leere GUID\footnote{
-        Eine "leere" GUID entspricht dem Wert 0 (\texttt{00000000-0000-0000-0000-000000000000})
-    } bedeutet, dass dieser Eintrag leer ist, also keine Partition beschreibt.
+        Eine GUID gilt als "leer", wenn alle Felder den Wert 0 besitzen (\texttt{00000000-0000-0000-0000-000000000000})
+    } bedeutet, dass dieser Eintrag nicht in Verwendung ist, also keine Partition beschreibt.
     Ein Eintrag, der in Verwendung ist, also eine Partition auf dem Datenträger beschreibt, muss in diesem Feld eine nicht leere GUID besitzen.
 
     \item \textbf{uniquePartitionGuid}:
@@ -186,11 +196,40 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
 Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags den Wert 0 besitzen und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
 
+\subsection{Bearbeiten der Partitionstabelle}
+Wenn Änderungen an den GPT-Datenstrukturen vorgenommen werden, beispielsweise beim Hinzufügen neuer Partitionen, müssen die folgenden Richtlinien beachtet werden:
+
+\begin{itemize}
+    \item Wenn der primäre Header geändert wird, muss auch der Backup-Header entsprechend geändert werden und umgekehrt.
+    Dies ist wichtig, damit bei Datenverlust in einem Header der jeweils Andere zur Wiederherstellung verwendet werden kann.
+
+    \item Header und Partitions-Array dürfen in beliebiger Reihenfolge geändert werden.
+    
+    \item Der Backup-Header muss vor dem primären Header geändert werden.
+
+    \item Nach jeder Änderung an einem Header oder Partitions-Array muss die zugehörige CRC32-Checksumme aktualisiert werden.
+    Wenn beispielsweise ein Eintrag im Partitions-Array geändert wird, muss dessen Checksumme (\textit{partitionEntryArrayCrc32}) im Header aktualisiert werden.
+    Dadurch wird der Inhalt des Headers geändert, weshalb dessen CRC32-Checksumme (\textit{headerCrc32}) ebenfalls neu berechnet werden muss.
+\end{itemize}
+
+\subsection{Gültigkeit prüfen}
+Um zu prüfen, ob eine GPT Partitionstabelle gültig ist, müssen folgende Schritte für den primären und sekundären Header durchgeführt werden:
+
+\begin{enumerate}
+    \item Prüfen, ob das Feld \textit{signature} dem Wert \texttt{0x5452415020494645} entspricht.
+    \item Prüfen, ob die CRC32-Checksumme des Headers korrekt ist.
+    \item Prüfen, ob sich der Header im Block befindet, der im Feld \textit{myLba} angegeben ist.
+    \item Prüfen, ob die CRC32-Checksumme des zugehörigen Partitions-Arrays korrekt ist.
+\end{enumerate}
+
+Wenn ein Header fehlerhaft ist, muss geprüft werden, ob der andere Header korrekt ist.
+In diesem Fall kann der fehlerhafte Header wiederhergestellt werden, allerdings sollte der Anwender dies explizit bestätigen müssen.\cite{uefi-spec}
+
 \subsection{Bootloader}
 \label{sec:gpt:bootloader}
 
 Anders als bei anderen Verfahren besitzt GPT eine spezielle Systempartition, die den Boot-loader-Code beinhaltet.
-In dieser Partition können mehrere Einträge hinzugefügt werden, was Multiboot-Systeme deutlich einfacher und vor Allem robuster macht.\cite{heise-mbr-gpt}
+In dieser Partition können mehrere Einträge hinzugefügt werden, wodurch Multiboot-Systeme deutlich einfacher und vor Allem robuster werden.\cite{heise-mbr-gpt}
 Bei einem Datenträger, der kein startbares Betriebssytem beinhaltet, fehlt diese Partition.
 
 Dieser Partitions-Typ besitzt eine fest definierte GUID im Feld \textit{partitionTypeGuid}.
@@ -213,19 +252,19 @@ MBR hingegen verwendet 32 Bit große Datenstrukturen, wodurch sich eine maximale
 In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann, wenn er nach dem MBR-Verfahren partitioniert ist.
 Da MBR allerdings nicht die Block-Nummer des letzten Blockes einer Partition, sondern dessen Länge in Blöcken speichert, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
 Um dies zu erreichen, kann eine 2TiB große Partition angelegt werden, dessen Startblock sich an der größten möglichen LBA-Adresse befindet.
-Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, die intern Block-Nummern verwalten können, die größer als 32 Bit sind.
+Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, welche intern Block-Nummern verwalten können, die größer als 32 Bit sind.
 Diese Betriebssysteme können meist auch das GPT verwenden, weshalb dieses Verfahren in der Praxis selten angewendet wird.\cite{mbr-4tb-workaround}
 
 Für heutige Datenträger sind oft weder 2TiB noch 4TiB ausreichend, weshalb die maximale Kapazität häufig das ausschlaggebenste Kriterium für die Verwendung von GPT ist.
 
-\subsubsection{Maximale Anzahl Partitionen}
+\subsubsection{Maximale Anzahl an Partitionen}
 \label{sec:gpt:limits:max-partition-count}
 
 GPT verwendet 32 Bits um die Anzahl der Partitionen auf einem Datenträger zu speichern (\textit{numberOfPartitionEntries}), was bedeutet dass maximal $ 2^{32} $ Partitionen verwaltet werden können.
-Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux maximal 256 Partionen und unter Windows 128 Partitionen auf einem Datenträger verwendet werden.
+Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beispielsweise können unter Linux maximal 256 Partitionen und unter Windows 128 Partitionen auf einem Datenträger verwendet werden.
 
 MBR hingegen kann maximal vier (primäre) Partitionen verwalten.
-Um dieses Limit zu erhöhen können in einer primären Partition weitere logische Partitionen angelegt werden.
+Um dieses Limit zu erhöhen, können in einer primären Partition weitere logische Partitionen angelegt werden.
 
 \newpage
 \subsection{Vorteile gegenüber MBR}
@@ -237,28 +276,23 @@ Diese Vorteile werden an dieser Stelle noch einmal gesammelt aufgeführt.
 \begin{itemize}
     \item \textbf{Maximale Größe von Partitionen:}
     GPT verwendet 64 Bit große Datenstrukturen, um LBA-Block-Nummern zu speichern, MBR 32 Bit.
-    Dadurch ergeben sich nutzbare Größen von 8ZiB gegenüber 2TiB. 
-    (Vgl. Abschnitt \ref{sec:gpt:limits:max-partition-size})
+    Dadurch ergeben sich nutzbare Größen von 8ZiB gegenüber 2TiB (vgl. Abschnitt \ref{sec:gpt:limits:max-partition-size}).
 
     \item \textbf{Maximale Anzahl von Partitionen:}
-    GPT kann $ 2^{32} $, MBR nur 4 primäre Partitionen verwalten. 
-    (Vgl. Abschnitt \ref{sec:gpt:limits:max-partition-count})
+    GPT kann $ 2^{32} $, MBR nur 4 primäre Partitionen verwalten (vgl. Abschnitt \ref{sec:gpt:limits:max-partition-count}).
 
     \item \textbf{Erweiterbarkeit:}
     Die von GPT verwendeten Datenstrukturen sind so konzeptioniert, dass in Zukunft einfach Erweiterungen vorgenommen werden können.
-    Beispielsweise werden Revision und Größe der Datenstrukturen in der Partitionstabelle gespeichert. (Vgl. Abschnitt \ref{sec:gpt:structure})
+    Beispielsweise werden Revision und Größe der Datenstrukturen in der Partitionstabelle gespeichert (vgl. Abschnitt \ref{sec:gpt:structure}).
 
     \item \textbf{Datensicherheit:} 
-    GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers.
-    (Vgl. Abschnitt \ref{sec:gpt:structure})
+    GPT verwaltet 2 redundante Partitionstabellen in verschiedenen Bereichen eines Datenträgers (vgl. Abschnitt \ref{sec:gpt:structure}).
     
     \item \textbf{Datenintegrität:}
-    GPT verwendet CRC32 Checksummen, um die Integrität der Daten sicherzustellen.
-    (Vgl. Abschnitt \ref{sec:gpt:structure})
+    GPT verwendet CRC32 Checksummen, um die Integrität der Daten sicherzustellen (vgl. Abschnitt \ref{sec:gpt:structure}).
 
-    \item \textbf{Bootloader:} 
+    \item \textbf{Bootloader:}
     GPT besitzt eine spezielle Systempartition, die den Bootloader-Code beinhaltet.
-    Dadurch wird die Verwaltung des Bootloader-Codes und die Verwendung von Multiboot-Systemen vereinfacht.
-    (Vgl. Abschnitt \ref{sec:gpt:bootloader})
+    Dadurch wird die Verwaltung des Bootloader-Codes und die Verwendung von Multiboot-Systemen vereinfacht (vgl. Abschnitt \ref{sec:gpt:bootloader}).
 
 \end{itemize}

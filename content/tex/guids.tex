@@ -10,15 +10,16 @@ Aktuelle Softwaresysteme sind oft Zusammenschlüsse aus verschiedenen Anwendunge
 In diesen Systemen ist es nicht trivial, Informationen eindeutig zu identifizieren. Einfache, aufsteigende IDs sind beispielsweise nicht praktikabel, wenn mehrere Knoten in einem solchen System IDs vergeben können, da so Überschneidungen auftreten können.
 
 Die Synchronisierung der bereits vergebenen IDs zwischen allen Knoten ist aufwändig, fehleranfällig und beeinträchtigt die Skalierbarkeit, wodurch diese Lösung meist nicht verwendet wird.
-Auch die Verwendung einer zentralen Registrierungsstelle, die als führendes System IDs vergibt, ist nicht ideal, da so ebenfalls die Skalierbarkeit beeinträchtigt wird und darüberhinaus ein Single Point of Failure geschaffen wird, wodurch der Vorteil eines verteilten Systems wieder zunichte gemacht wird.
+Auch die Verwendung einer zentralen Registrierungsstelle, die als führendes System IDs vergibt, ist nicht ideal, da so ebenfalls die Skalierbarkeit beeinträchtigt wird. 
+Darüberhinaus wird so ein Single Point of Failure geschaffen, der den Vorteil eines verteilten Systems wieder zunichte macht.
 
-GUIDs lösen diese Probleme, da sie als praktisch eindeutig verwendet werden können, ohne dass eine Abstimmung mit anderen Knoten oder eine zentrale Registrierungsstelle notwendig ist.
+GUIDs lösen diese Probleme, da sie als praktisch eindeutig angesehen werden können, ohne dass eine Abstimmung mit anderen Knoten oder eine zentrale Registrierungsstelle notwendig ist.
 Kollisionen sind zwar nicht ausgeschlossen, aber so unwahrscheinlich, dass sie in der Praxis nicht berücksichtigt werden müssen.
 
 
 \subsection{Generierung}
-Bei GUIDs wird zwischen 5 Versionen unterschieden, die jeweils unterschiedliche Methoden zur Generierung der 128 Bits verlangen.
-Welche Version vorliegt, ist an den höchstwertigsten 4 Bits des siebten Oktetts einer GUID zu erkennen.
+Bei GUIDs wird zwischen fünf Versionen unterschieden, die jeweils unterschiedliche Methoden zur Generierung der 128 Bits verlangen.
+Welche Version vorliegt, ist an den höchstwertigsten vier Bits des siebten Oktetts einer GUID zu erkennen.
 
 Je nach Anwendungsfall können verschiedene Methoden, also GUID-Versionen, besser geeignet sein.
 Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während eine andere Variante komplett zufallsbasiert erstellt wird.\footnote{
@@ -26,7 +27,7 @@ Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während ei
 }
 
 \subsection{Darstellung}
-Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
+Bei einer Darstellung in Textform wird eine GUID in fünf Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
 
 \begin{table}[ht]
     \begin{center}
@@ -40,7 +41,9 @@ Bei einer Darstellung in Textform wird eine GUID in 5 Gruppen unterteilt, die in
         \texttt{node}                                                                                         & 6                        \\ \hline
         \end{tabular}
     \end{center}
-    
+
+    \vspace{-0.5cm}
+
     \caption{Aufbau einer GUID der Version 1}
     \label{tbl:guid_layout}
 \end{table}
