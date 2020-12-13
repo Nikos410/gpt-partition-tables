@@ -1,13 +1,133 @@
-\section{GUID Partition Table (GPT)}
+\section{GUID Partition Table}
 \label{sec:structure}
+In diesem Abschnitt wird der Standard \textit{GUID Partition Table} (GPT) detailliert beschrieben.
+
+Im Zuge dieser Ausarbeitung wurde außerdem eine Anwendung entwickelt, um Partitions-Informationen aus einem Datenträger, der nach dem GPT-Verfahren partitioniert ist, auszulesen.
+Der komplette Quellcode ist im Github-Repository \textit{Nikos410/simple-gpt-reader}\footnote{\url{https://github.com/Nikos410/simple-gpt-reader}} zu finden.
+Diese Anwendung wird im folgenden als \textit{simple-gpt-reader} bezeichnet.
+
 
 \subsection{Aufbau}
+Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partioniert ist, werden im folgenden genauer erläutert.
+Diese Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
+
+\begin{figure}[ht]
+    \includegraphics[width=\textwidth]{content/graphics/GPT_Layout.png}
+    \caption{Datenstrukturen auf einem Datenträger mit GPT-Partitionierung. \cite{uefi-spec}}
+    \label{fig:gpt_layout}
+\end{figure}
 
 \subsubsection{Protective MBR}
+Viele ältere Betriebssyteme und Programme, die GPT nicht unterstützen, erwarten in LBA 0 einen MBR.
+Wenn dieser nicht vorhanden ist, gilt der Datenträger für diese Systeme als nicht oder fehlerhaft partitioniert.
+Damit der Datenträger in diesen Fällen nicht überschrieben wird, sieht GPT in LBA 0 einen MBR vor.
+
+Dieser MBR gibt an, dass der Datenträger eine einzelne Partition beinhaltet, der den ganzen Datenträger umfasst.\footnote{
+    Bei einem Datenträger, der die maximale von MBR adressierbare Größe überschreitet, beträgt die Größe dieser Partition die maximale Größe, die von MBR adressiert werden kann.
+}
+Dadurch muss in den zuvor erwähnten Systemen meist ein Nutzer zunächst diese Partitionen explizit löschen, bevor der Datenträger neu partitioniert werden kann.
+Da so die GPT-Partitionsdaten sozusagen "geschützt" werden, wird dieser MBR als \textit{Protective MBR} bezeichnet.
+Für die Funktion von GPT hat der Protective MBR ansonsten keine Bedeutung.
+
+In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Protective MBR grafisch dargestellt.
+
+\begin{figure}[ht]
+    \includegraphics[width=\textwidth]{content/graphics/GPT_Layout_with_protective_MBR.png}
+    
+    \caption{Datenträger mit Protective MBR. \cite{uefi-spec}}
+    \label{fig:protective-mbr}
+\end{figure}
+
 
 \subsubsection{GPT Header}
+In LBA 1 befindet sich der sogenannte \textit{GPT Header}.
+Dieser Header beinhaltet allgemeine Informationen über den Datenträger.
+Im letzten Block eines Datenträgers befindet sich ein zweiter Header, um durch Redundanz Datenverlust vorzubeugen.
+Der Header in LBA 1 wird dabei als \textit{primärer}, der Header am Ende als \textit{backup} Header bezeichnet.
+
+In Abbildung \ref{fig:GptHeader.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um den Header abzubilden.
+Die Bedeutung und der Zweck der einzelnen Felder werden im folgenden genauer erläutert.
+
+\begin{figure}[ht]
+    \inputminted[baselinestretch=1.2, linenos, tabsize=4, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptHeader.hpp}
+    
+    \caption{simple-gpt-reader/GptHeader.hpp (Auszug)}
+    \label{fig:GptHeader.hpp}
+\end{figure}
+
+\newpage
+\begin{itemize}
+    \item \textbf{signature}: 
+    Das erste Feld beinhaltet eine Signatur, um zu erkennen, ob es sich um einen GPT Header handelt.
+    Diese Signatur muss den Wert \texttt{0x5452415020494645}\footnote{
+        Dieser Wert entspricht dem ASCII-String "\texttt{EFI PART}"
+    } 
+    besitzen, damit es sich um einen gültigen GPT Header handelt.
+
+    \item \textbf{revision}:
+    Damit der GPT-Standard in Zukunft erweitert werden kann, ist hier die Revision gespeichert, an der man erkennen kann, wie die Daten im folgenden aufgebaut sind.
+    In dieser Ausarbeitung ist die aktuellste\footnote{
+        Stand Dezember 2020
+    }
+    Revision 1.0 beschrieben, in der dieses Feld den Wert \texttt{0x00010000} besitzt.
+
+    \item \textbf{headerSize}:
+    Die Größe des Headers in Bytes.
+    Auch dies erleichtert es, den GPT-Standard in Zukunft erweitern zu können.
+
+    \item \textbf{headerCrc32}:
+    Die CRC32-Checksumme des Headers.
+    Die Bytes, die für die Berechnung verwendet werden, ergeben sich aus dem Wert des Feldes \textit{headerSize}.
+    Es wird diese Anzahl Bytes ab dem Anfang des Headers verwendet.
+    Bei der Berechnung wird dieses Feld auf 0 gesetzt, damit der Wert dieses Feldes keinen Einfluss auf die Checksumme hat.
+
+    \item \textbf{reserved}:
+    Dieses Feld wird nicht verwendet und muss den Wert 0 besitzen. Zukünftige Revisionen können dieses Feld verwenden.
+
+    \item \textbf{myLba}:
+    Der Block, in dem sich der aktuelle Header befindet.
+
+    \item \textbf{alternateLba}:
+    Der Block, in dem sich der andere Header befindet.
+    Beim primären Header besitzt beinhaltet Feld die Block-Nummer des Backup-Headers, beim Backup-Header die Block-Nummer des primären Headers.
+
+    \item \textbf{firstUsableLba}:
+    Der erste Block, der für eine Partition verwendet werden kann.
+    Für gewöhnlich der erste Block nach dem Partitions-Array\footnote{
+        vgl. Abschnitt \ref{sec:gpt:structure:entry-array}
+    }.
+
+    \item \textbf{lastUsableLba}:
+    Der letzte Block, der für eine Partition verwendet werden kann.
+
+    \item \textbf{diskGuid}:
+    Eine GUID, die verwendet werden kann, um den Datenträger eindeutig zu identifizieren.\cite{uefi-spec}
+    Diese GUID wird beim Anlegen einer GPR-Partitionstabelle erstellt, daher kann nur die Partitionstabelle eindeutig identifiziert werden, weshalb die Bezeichnung \textit{diskGuid} irreführend ist.
+
+    \item \textbf{partitionEntryLba}:
+    Der erste Block des Partitions-Arrays.
+
+    \item \textbf{numberOfPartitionEntries}:
+    Die Anzahl der Einträge im Partitions-Array.
+    Dies entspricht nicht der Anzahl der Partitionen, die tatsächlich auf dem Datenträger vorliegen, sondern der maximalen Anzahl der Partitionen, die im Partitions-Array gespeichert werden können.
+
+    \item \textbf{sizeOfPartitionEntry}:
+    Die Größe eines einzelnen Eintrages im Partitions-Array in Bytes.
+    Zusammen mit \textit{numberOfPartitionEntries} kann so die Größe des Partitions-Arrays bestimmt werden.
+
+    \item \textbf{partitionEntryArrayCrc32}:
+    Die CRC32-Checksumme des Partitions-Arrays.
+    
+\end{itemize}
+
+Der Rest des Blocks muss den Wert 0 besitzen.
 
 \subsubsection{Partitions-Array}
+\label{sec:gpt:structure:entry-array}
+
+
+\subsection{Bootloader}
+
 
 \subsection{Vorteile gegenüber MBR}
 \label{sec:gpt:advantages}
@@ -24,7 +144,7 @@
     Bei 512 Byte großen Blöcken ergibt sich so eine maximale Partitionsgröße von $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $.
 
     In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann.
-    Da MBR (bei LBA-Adressierung) allerdings nicht die Block-Nummer des letzten Blockes einer Partition speichert, sondern dessen Länge in Blöcken, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
+    Da MBR (bei LBA-Adressierung) zusätzlich zur Block-Nummer des letzten Blockes einer Partition auch dessen Länge in Blöcken speichert, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
     Um dies zu erreichen, kann eine 2TiB große Partition angelegt werden, dessen Startblock sich an der größten möglichen LBA-Adresse befindet.
     Dieses Verfahren wird allerdings nur von wenigen Betriebssystemen unterstützt, die intern Block-Nummern verwalten können, die größer als 32 Bit sind.
     Diese Betriebssysteme können meist auch das GPT verwenden, weshalb dieses Verfahren in der Praxis selten angewendet wird.\cite{mbr-4tb-workaround}
