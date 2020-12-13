@@ -156,10 +156,12 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \item \textbf{attributes}:
     
     \item \textbf{partitionName}:
+    Null-terminierter String, der einen Namen der Partition beinhaltet.
+    Dieser Name muss nicht dem Namen des Dateisystems, das sich in dieser Partition befindet, entsprechen.
 
 \end{itemize}
 
-Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags 0 sein und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
+Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags den Wert 0 besitzen und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
 
 \subsection{Bootloader}
 
