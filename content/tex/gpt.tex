@@ -230,7 +230,7 @@ Wenn Änderungen an den GPT-Datenstrukturen vorgenommen werden, beispielsweise b
     \item Der Backup-Header muss vor dem primären Header geändert werden.
 
     \item Nach jeder Änderung an einem Header oder Partitions-Array muss die zugehörige CRC32-Checksumme aktualisiert werden.
-    Wenn beispielsweise ein Eintrag im Partitions-Array geändert wird, muss dessen Checksumme (\textit{partitionEntryArrayCrc32}) im Header aktualisiert werden.
+    Wenn beispielsweise ein Eintrag im Parti-tions-Array geändert wird, muss dessen Checksumme (\textit{partitionEntryArrayCrc32}) im Header aktualisiert werden.
     Dadurch wird der Inhalt des Headers geändert, weshalb dessen CRC32-Checksumme (\textit{headerCrc32}) ebenfalls neu berechnet werden muss.
 \end{itemize}
 
