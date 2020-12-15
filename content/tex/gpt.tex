@@ -12,32 +12,34 @@ Diese Anwendung wird im Folgenden als \textit{simple-gpt-reader} bezeichnet.
 \label{sec:gpt:structure}
 
 Die einzelnen Datenstrukturen, die auf einem Datenträger vorliegen, der nach dem GPT-Verfahren partitioniert ist, werden im Folgenden genauer erläutert.
-Die Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
+Eine mögliche Anordnung dieser Datenstrukturen ist in Abbildung \ref{fig:gpt_layout} grafisch dargestellt.
 
 \begin{figure}[ht]
-    \includegraphics[width=\textwidth]{content/graphics/GPT_Layout.png}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{content/graphics/GPT_Layout.png}
+    \end{center}
 
-    \vspace{-0.2cm}
+    \vspace{-0.5cm}
 
-    \caption{Datenstrukturen auf einem Datenträger mit GPT-Partitionierung. \cite{uefi-spec}}
+    \caption{Mögliche Anordnungen der Datenstrukturen auf einem Datenträger mit GPT-Partitionierung. \cite{uefi-spec}}
     \label{fig:gpt_layout}
-
-    \vspace{1cm}
 \end{figure}
+\vspace{-0.5cm}
 
+\newpage
 \subsubsection{Protective MBR}
 Viele ältere Betriebssyteme und Programme, die GPT nicht unterstützen, erwarten in LBA 0 einen MBR.
 Wenn dieser nicht vorhanden ist, gilt der Datenträger für diese Systeme als nicht oder fehlerhaft partitioniert.
 Damit der Datenträger in diesen Fällen nicht überschrieben wird, sieht GPT in LBA 0 einen MBR vor.
 
-Dieser MBR gibt an, dass der Datenträger eine einzelne Partition beinhaltet, die den ganzen Datenträger umfasst.\footnote{
-    Bei einem Datenträger, der die maximale von MBR adressierbare Größe überschreitet, beträgt die Größe dieser Partition die maximale Größe, die von MBR adressiert werden kann.
-}
+Dieser MBR gibt an, dass der Datenträger eine einzelne Partition beinhaltet, die den ganzen Datenträger umfasst.
+
 Dadurch muss in den zuvor erwähnten Systemen üblicherweise ein Nutzer zunächst diese Partitionen explizit löschen, bevor der Datenträger neu partitioniert werden kann.
 Da so die GPT-Partitionsdaten sozusagen "geschützt" werden, wird dieser MBR als \textit{Protective MBR} bezeichnet.
 Für die Funktion von GPT hat der Protective MBR ansonsten keine Bedeutung.
 
 In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Protective MBR dargestellt.
+Es ist zu erkennen dass die \textit{GPT Protective partition} (rot) den gesamten Datenträger umfasst.
 
 \begin{figure}[ht!]
     \includegraphics[width=\textwidth]{content/graphics/GPT_Layout_with_protective_MBR.png}
@@ -48,7 +50,22 @@ In Abbildung \ref{fig:protective-mbr} ist der Aufbau eines Datenträgers mit Pro
     \label{fig:protective-mbr}
 \end{figure}
 
+Bei einem Datenträger, der die maximale von MBR adressierbare Größe überschreitet, beträgt die Größe dieser Partition die maximale Größe, die von MBR adressiert werden kann.
+Dadurch belegt diese Partition trotzdem den kompletten von MBR nutzbaren Speicher.
+Dieser Fall ist in Abbildung \ref{fig:protective-mbr-large-disk} abgebildet.
+Hier ist zu erkennen, dass die \textit{GPT Protective partition} (rot) \textbf{nicht} den gesamten Datenträger umfasst.
 
+\begin{figure}[ht!]
+    \includegraphics[width=\textwidth]{content/graphics/GPT_Layout_with_protective_MBR_large_disk.png}
+    
+    \vspace{-0.2cm}
+
+    \caption{Protective MBR auf einem Datenträger, der die maximale von MBR adressierbare Größe überschreitet.\cite{uefi-spec}}
+    \label{fig:protective-mbr-large-disk}
+\end{figure}
+
+
+\newpage
 \subsubsection{GPT Header}
 In LBA 1 befindet sich der sogenannte \textit{GPT Header}.
 Dieser Header beinhaltet allgemeine Informationen über den Datenträger.
@@ -84,8 +101,11 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
     \item \textbf{headerSize}:
     Die Größe des Headers in Bytes.
-    Auch dies erleichtert es, den GPT-Standard in Zukunft erweitern zu können.
+    Üblicherweise entspricht der Wert dieses Feldes der Größe der in Abbildung \ref{fig:GptHeader.hpp} dargestellten Datenstruktur (96 Bytes).
+    
+    Auch dieses Feld dient dazu, zukünftige Erweiterungen des GPT-Standards, die Änderungen an den Datenstrukturen vornehmen könnten, zu erleichtern.
 
+    \newpage
     \item \textbf{headerCrc32}:
     Die CRC32-Checksumme des Headers.
     Dies dient dazu, die Integrität der Daten sicherzustellen.
@@ -161,6 +181,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
     Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
 
+    \newpage
     Anhand dieses Feldes kann auch erkannt werden, ob dieser Eintrag im Partitions-Array in Verwendung oder leer ist.
     Eine leere GUID\footnote{
         Eine GUID gilt als "leer", wenn alle Felder den Wert 0 besitzen (\texttt{00000000-0000-0000-0000-000000000000})
@@ -183,6 +204,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \item \textbf{endingLba}:
     Der letzte Block der Partition, die von diesem Eintrag beschrieben wird.
 
+    \newpage
     \item \textbf{attributes}:
     Die einzelnen Bits dieses Feldes entsprechen verschiedenen Attributen.
     Diese Attribute sind für die Partitionierung selbst nicht relevant, sondern spezifizieren vor Allem, wie das Betriebssystem oder die Firmware eines Computers mit dieser Partition interagieren muss.
@@ -215,6 +237,7 @@ Wenn Änderungen an den GPT-Datenstrukturen vorgenommen werden, beispielsweise b
 \subsection{Gültigkeit prüfen}
 Um zu prüfen, ob eine GPT Partitionstabelle gültig ist, müssen folgende Schritte für den primären und sekundären Header durchgeführt werden:
 
+\newpage
 \begin{enumerate}
     \item Prüfen, ob das Feld \textit{signature} dem Wert \texttt{0x5452415020494645} entspricht.
     \item Prüfen, ob die CRC32-Checksumme des Headers korrekt ist.
@@ -237,7 +260,7 @@ Firmware, die den GPT-Standard unterstützt, muss diese GUID kennen und den Boot
 
 Auch dieses Verfahren verbessert die Erweiterbarkeit des GPT-Standards, da die Größe dieser Partition flexibel an die Länge des Bootloader-Codes angepasst werden kann.
 
-\newpage
+
 \subsection{Limits}
 In diesem Abschnitt werden die Grenzen beschrieben, die der GPT-Standard besitzt.
 
@@ -245,9 +268,11 @@ In diesem Abschnitt werden die Grenzen beschrieben, die der GPT-Standard besitzt
 \label{sec:gpt:limits:max-partition-size}
 
 GPT verwendet 64 Bit große Datenstrukturen, um die LBA-Block-Nummern von Anfang und Ende der einzelnen Partitionen zu speichern.
-Die üblicherweise verwendete Block-Größe beträgt 512 Bytes, wodurch sich eine maximale verwendbare Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.
+Die üblicherweise verwendete Block-Größe beträgt 512 Bytes, wodurch sich eine maximale verwendbare Größe von $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $ ergibt.\footnote{
+    Um diese Größe einzuordnen: Im Jahr 2018 wurde die Datenmenge, die weltweit existierte, auf 33 ZB geschätzt.\cite{global-datasphere-estimate}
+}
 
-MBR hingegen verwendet 32 Bit große Datenstrukturen, wodurch sich eine maximale adressierbare Größe von $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $ ergibt.
+MBR hingegen verwendet 32 Bit große Datenstrukturen, wodurch sich eine maximale adressierbare Größe von lediglich $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $ ergibt.
 
 In den meisten Betriebssystemen entspricht dies auch der maximalen Größe, die ein Datenträger besitzen kann, wenn er nach dem MBR-Verfahren partitioniert ist.
 Da MBR allerdings nicht die Block-Nummer des letzten Blockes einer Partition, sondern dessen Länge in Blöcken speichert, können in manchen Betriebssystemen bis zu 4TiB eines Datenträgers verwendet werden. 
@@ -266,7 +291,6 @@ Dieses Limit wird allerdings nicht von allen Betriebssystemen unterstützt, beis
 MBR hingegen kann maximal vier (primäre) Partitionen verwalten.
 Um dieses Limit zu erhöhen, können in einer primären Partition weitere logische Partitionen angelegt werden.
 
-\newpage
 \subsection{Vorteile gegenüber MBR}
 \label{sec:gpt:advantages}
 

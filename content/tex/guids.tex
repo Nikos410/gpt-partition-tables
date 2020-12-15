@@ -23,17 +23,18 @@ Welche Version vorliegt, ist an den höchstwertigsten vier Bits des siebten Okte
 
 Je nach Anwendungsfall können verschiedene Methoden, also GUID-Versionen, besser geeignet sein.
 Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während eine andere Variante komplett zufallsbasiert erstellt wird.\footnote{
-    Auf die Details der Generierung wird hier nicht weiter eingegangen, das dies den Rahmen dieser Ausarbeitung sprengen würde.
+    Auf die Details der Generierung wird hier nicht weiter eingegangen, das diese für die Funktionsweise von GPT nicht relevant sind und den Rahmen dieser Ausarbeitung sprengen würden.
 }
 
 \subsection{Darstellung}
 Bei einer Darstellung in Textform wird eine GUID in fünf Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
 
+\vspace{-0.4cm}
 \begin{table}[ht]
     \begin{center}
         \begin{tabular}{|l|l|}
         \hline
-        \textbf{Feld}                                                                                         & \textbf{Größe (Oktette)} \\ \hline
+        \textbf{Feld}                                                                                         & \textbf{Größe (Bytes)} \\ \hline
         \texttt{time\_low}                                                                                    & 4                        \\ \hline
         \texttt{time\_mid}                                                                                    & 2                        \\ \hline
         \texttt{time\_hi\_and\_version}                                                                       & 2                        \\ \hline
@@ -42,15 +43,18 @@ Bei einer Darstellung in Textform wird eine GUID in fünf Gruppen unterteilt, di
         \end{tabular}
     \end{center}
 
-    \vspace{-0.5cm}
+    \vspace{-0.6cm}
 
     \caption{Aufbau einer GUID der Version 1}
     \label{tbl:guid_layout}
 \end{table}
+\vspace{-0.5cm}
 
 Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}
-Die einzelnen Oktette (Bytes) werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
+Die einzelnen Bytes werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
 Eine GUID könnte also zum Beispiel wie folgt aussehen:
+
+\vspace{-0.5cm}
 
 \begin{center}
     \texttt{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}
