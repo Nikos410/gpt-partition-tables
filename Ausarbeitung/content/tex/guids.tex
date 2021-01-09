@@ -26,10 +26,10 @@ Eine Version wird beispielsweise auf Basis der Systemzeit generiert, während ei
     Auf die Details der Generierung wird hier nicht weiter eingegangen, das diese für die Funktionsweise von GPT nicht relevant sind und den Rahmen dieser Ausarbeitung sprengen würden.
 }
 
-\subsection{Darstellung}
-Bei einer Darstellung in Textform wird eine GUID in fünf Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
+\subsection{Aufbau}
+Die 128 Bytes einer GUID sind in fünf Gruppen unterteilt, die in Tabelle \ref{tbl:guid_layout} aufgeführt sind.
 
-\vspace{-0.4cm}
+\vspace{-0.2cm}
 \begin{table}[ht]
     \begin{center}
         \begin{tabular}{|l|l|}
@@ -51,7 +51,12 @@ Bei einer Darstellung in Textform wird eine GUID in fünf Gruppen unterteilt, di
 \vspace{-0.5cm}
 
 Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}
-Die einzelnen Bytes werden jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
+
+Die einzelnen Felder werden allgemein nach dem "Big-Endian"-Format gespeichert.
+Bei den GUIDs, die von GPT verwendet werden, wird für die ersten 3 Felder (\texttt{time\_low}, \texttt{time\_mid} und \texttt{time\_hi\_and\_version}) allerdings stattdessen das "Little-Endian"-Format verwendet.\cite{uefi-spec}
+Dies wird auch als "Mixed-Endian" bezeichnet.
+
+Bei einer textuellen Darstellung werden die einzelnen Bytes jeweils als zweistellige Hexadezimalzahl dargestellt und die einzelnen Gruppen durch Bindestriche getrennt.
 Eine GUID könnte also zum Beispiel wie folgt aussehen:
 
 \vspace{-0.5cm}
