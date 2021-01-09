@@ -45,12 +45,12 @@ Die 128 Bytes einer GUID sind in fünf Gruppen unterteilt, die in Tabelle \ref{t
 
     \vspace{-0.6cm}
 
-    \caption{Aufbau einer GUID der Version 1}
+    \caption{Aufbau einer GUID}
     \label{tbl:guid_layout}
 \end{table}
 \vspace{-0.5cm}
 
-Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen in der Darstellung verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}
+Diese Unterteilung basiert auf den Feldern der ersten, Systemzeit-basierten Version, wird aber bei allen Vesionen verwendet, weshalb die Bezeichnungen der Felder nur berenzt aussagekräftig sind.\cite{uuid-rfc}
 
 Die einzelnen Felder werden allgemein nach dem "Big-Endian"-Format gespeichert.
 Bei den GUIDs, die von GPT verwendet werden, wird für die ersten 3 Felder (\texttt{time\_low}, \texttt{time\_mid} und \texttt{time\_hi\_and\_version}) allerdings stattdessen das "Little-Endian"-Format verwendet.\cite{uefi-spec}
