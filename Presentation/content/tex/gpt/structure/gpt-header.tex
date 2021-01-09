@@ -1,0 +1,121 @@
+\begin{frame}
+    \frametitle{GPT Header}
+
+    \begin{itemize}
+        \item Allgemeine Informationen über Datenträger.
+        \item Primärer Header liegt \textbf{immer} in LBA 1.
+        \item Backup-Header liegt am Ende des Datenträgers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{GPT Header}
+    \framesubtitle{Aufbau}
+
+    \begin{itemize}
+        \item \textbf{signature}
+        \begin{itemize}
+            \item Muss den ASCII-String \texttt{EFI PART} beinhalten.
+            \item Identifizierung, ob ein GPT-Header vorliegt.
+        \end{itemize}
+
+        \pause
+        \item \textbf{revision}
+        \begin{itemize}
+            \item Aktuell Revision 1.0: \texttt{0x00010000}
+            \item Unterstützt zukünftige Erweiterbarkeit.
+        \end{itemize}
+
+        \pause
+        \item \textbf{headerSize}
+        \begin{itemize}
+            \item Größe des Headers in Bytes.
+            \item Unterstützt zukünftige Erweiterbarkeit.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{GPT Header}
+    \framesubtitle{Aufbau}
+
+    \begin{itemize}
+        \item \textbf{headerCrc32}
+        \begin{itemize}
+            \item CRC-32-Checksumme des Headers.
+            \item Sicherung der Datenintegrität.
+            \item Dieses Feld wird bei Berechnung auf 0 gesetzt.
+        \end{itemize}
+
+        \pause
+        \item \textbf{myLba}
+        \begin{itemize}
+            \item LBA-Nummer des Headers.
+        \end{itemize}
+
+        \pause
+        \item \textbf{alternateLba}
+        \begin{itemize}
+            \item LBA-Nummer des anderen Headers.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{GPT Header}
+    \framesubtitle{Aufbau}
+
+    \begin{itemize}
+        \item \textbf{firstUsableLba}
+        \begin{itemize}
+            \item LBA-Nummer des ersten für Paritionen verwendbaren Blocks.
+        \end{itemize}
+
+        \pause
+        \item \textbf{lastUsableLba}
+        \begin{itemize}
+            \item LBA-Nummer des letzten für Paritionen verwendbaren Blocks.
+        \end{itemize}
+
+        \pause
+        \item \textbf{diskGuid}
+        \begin{itemize}
+            \item GUID des Datenträgers.
+            \item Eindeutige Identifizierung des Datenträgers.
+            \item Wird bei Erstellung der Partitionstabelle neu generiert, daher richtiger: 
+            \\GUID der Partitionstabelle.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{GPT Header}
+    \framesubtitle{Aufbau}
+
+    \begin{itemize}
+        \item \textbf{partitionEntryLba}
+        \begin{itemize}
+            \item Der erste Block des Partitions-Arrays.
+        \end{itemize}
+
+        \pause
+        \item \textbf{numberOfPartitionEntries}
+        \begin{itemize}
+            \item Anzahl Einträge im Partitions-Array.
+            \item \textbf{Nicht} Anzahl der Partitionen auf dem Datenträger.
+        \end{itemize}
+
+        \pause
+        \item \textbf{sizeOfPartitionEntry}
+        \begin{itemize}
+            \item Größe eines Eintrages im Partitions-Array.
+        \end{itemize}
+
+        \pause
+        \item \textbf{partitionEntryArrayCrc32}
+        \begin{itemize}
+            \item CRC-32-Checksumme des Partitions-Arrays.
+            \item Sicherung der Datenintegrität.
+        \end{itemize}
+    \end{itemize}
+\end{frame}

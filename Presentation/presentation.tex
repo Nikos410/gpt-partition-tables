@@ -1,0 +1,48 @@
+% !TeX encoding = UTF-8
+\documentclass[aspectratio=169,t]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+% Paragraphs without indenting
+\usepackage{parskip}
+% German quotation style
+\usepackage{csquotes}
+% Format code
+\usepackage{minted}
+% Allow adding logo to header
+\usepackage{tikz}
+% Allow using "fbox" and "frame" optins in includegraphics
+\usepackage[export]{adjustbox}
+% Allow including .svg images
+\usepackage{svg}
+% Use helvetica font 
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+% Allow using " for quotes
+\MakeOuterQuote{"}
+
+\input{content/tex/setup-beamer-style.tex}
+
+\begin{document}
+
+\input{content/tex/title-page.tex}
+
+\input{content/tex/introduction.tex}
+
+\input{content/tex/partition-tables.tex}
+
+\input{content/tex/addressing.tex}
+
+\input{content/tex/partition-tables.tex}
+
+\input{content/tex/guids.tex}
+
+\input{content/tex/gpt.tex}
+
+\input{content/tex/bibliography.tex}
+
+\input{content/tex/questions.tex}
+
+\end{document}

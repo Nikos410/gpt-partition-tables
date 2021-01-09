@@ -1,0 +1,75 @@
+\begin{frame}
+    \frametitle{Partitions-Array}
+
+    \begin{itemize}
+        \item Informationen über Partitionen.
+        \item Feste Anzahl Einträge. 
+        \item Einträge werden bei Anlegen der Partitionstabelle erstellt.
+        \item Jeder Eintrag \textbf{kann} eine Partition beschreiben.
+        \item Primäres und Backup- Partitions-Array
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Partitions-Array}
+    \framesubtitle{Aufbau eines Eintrages}
+
+    \begin{itemize}
+        \item \textbf{partitionTypeGuid}
+        \begin{itemize}
+            \item GUID des Partitions-Typs.
+            \item Partitions-Typ: "Verwendungszweck" der Partitionsinformationen (\textbf{nicht} verwendetes Dateisystem).
+            \item Unter Linux z.B. "Daten-Partition", "RAID-Partition" oder "Swap-Partition".
+            \item Indikator, ob Eintrag in Verwendung ist (eine Partition beschreibt). 
+            \\Ungenutzter Eintrag: \texttt{00000000-0000-0000-0000-000000000000}
+            \item GUIDs sind dezentral: Keine zentrale Liste mit allen Typen.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Partitions-Array}
+    \framesubtitle{Aufbau eines Eintrages}
+
+    \begin{itemize}
+        \item \textbf{uniquePartitionGuid}
+        \begin{itemize}
+            \item GUID dieser Partition.
+            \item Eindeutige Identifizierung der Partition.
+            \item Andere Verfahren: Identifizierung meist durch Position auf dem Datenträger (z.B. "Partition 2").
+        \end{itemize}
+
+        \pause
+        \item \textbf{startingLba}
+        \begin{itemize}
+            \item LBA-Nummer der ersten Blocks der Partition.
+        \end{itemize}
+
+        \pause
+        \item \textbf{endingLba}
+        \begin{itemize}
+            \item LBA-Nummer der letzten Blocks der Partition.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Partitions-Array}
+    \framesubtitle{Aufbau eines Eintrages}
+
+    \begin{itemize}
+        \item \textbf{attributes}
+        \begin{itemize}
+            \item Bits entsprechen verschiedenen Attributen.
+            \item Vor allem: Wie muss das Betriebssystem / die Firmware eines Computers mit dieser Partition interagieren.
+            \item Hier nicht genauer ausgeführt.
+        \end{itemize}
+
+        \pause
+        \item \textbf{partitionName}
+        \begin{itemize}
+            \item Name der Partition.
+            \item Meistens nicht verwendet.
+        \end{itemize}
+    \end{itemize}
+\end{frame}

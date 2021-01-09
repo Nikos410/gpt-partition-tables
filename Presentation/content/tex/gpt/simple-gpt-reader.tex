@@ -1,0 +1,77 @@
+\begin{frame}
+    \frametitle{simple-gpt-reader}
+    
+    \begin{itemize}
+        \item Programm, um Informationen aus GPT-Partitionstabellen auszulesen.
+        \item Funktioniert unter Unix-Systemen.
+        \item Einfache Verwendung. Zum Beispiel: \texttt{./simple-gpt-reader /dev/sdb}
+        \item Quellcode auf Github: \url{https://github.com/Nikos410/simple-gpt-reader}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{simple-gpt-reader}
+    \framesubtitle{Funktionsweise}
+    
+    \begin{itemize}
+        \item Datenträger zum Lesen öffnen.
+        \inputminted[firstline=8, lastline=8, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/LbaHelper.cpp}
+
+        \pause
+        \begin{itemize}
+            \item Verwendung des Datenträgers (\texttt{devicePath}) wie eine Datei.
+            \item "Everything is a file."
+        \end{itemize}
+
+        \pause
+        \item GPT Header in LBA 1 lesen.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{simple-gpt-reader}
+    \framesubtitle{Funktionsweise}
+    
+    \begin{itemize}
+        \item GPT Header prüfen.
+        \inputminted[firstline=3, lastline=8, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptHeader.cpp}
+
+        \pause
+        \begin{itemize}
+            \item Unvollständig.
+            \begin{itemize}
+                \item Z.B. CRC-32-Prüfung ausgelassen.
+                \item Wenn ungültig: ggf. aus alternativem Header wiederherstellen.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{simple-gpt-reader}
+    \framesubtitle{Funktionsweise}
+    
+    \begin{itemize}
+        \item Wenn gültig: GPT Header ausgeben.
+        
+        \pause
+        \item Partitions-Array lesen.
+        \begin{itemize}
+            \item Seek zu \texttt{partitionEntryLba}.
+            \item  \texttt{numberOfPartitionEntries} mal \texttt{sizeOfPartitionEntry} Bytes lesen.
+        \end{itemize}
+
+        \pause
+        \item Verwendete Einträge ausgeben.
+        \inputminted[firstline=3, lastline=5, breaklines, frame=single]{c++}{content/code/simple-gpt-reader/GptPartitionEntry.cpp}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{simple-gpt-reader}    
+
+    \begin{center}
+        \vspace{2.2cm}
+        \Huge{\textbf{Demo}}
+    \end{center}
+\end{frame}

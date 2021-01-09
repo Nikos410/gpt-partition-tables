@@ -1,0 +1,65 @@
+\begin{frame}
+    \frametitle{\_}
+
+    \begin{center}
+        \vspace{1.2cm}
+        \Huge{\textbf{Bewertung}}
+
+        \vspace{0.5cm}
+        \LARGE{GPT vs. MBR}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bewertung}
+    \framesubtitle{GPT vs. MBR}
+
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{exampleblock}{Vorteile}
+                \begin{itemize}
+                    \item \textbf{Größe von Partitionen / Datenträgern}
+                    \begin{itemize}
+                        \item GPT: $ 2^{64} \cdot 512 \mathrm{B} = 8 \mathrm{ZiB} $
+                        \item MBR: $ 2^{32} \cdot 512 \mathrm{B} = 2 \mathrm{TiB} $
+                    \end{itemize}
+                    
+                    \vspace{0.2cm}
+                    \item \textbf{Anzahl Partitionen auf einem Datenträger}
+                    \vspace{-0.4cm}
+                    \begin{itemize}
+                        \item GPT: Bis zu $ 2^{32} $ Partitionen
+                        \item MBR: Maximal 4 primäre Partitionen
+                    \end{itemize}
+
+                    \vspace{0.2cm}
+                    \item \textbf{Erweiterbarkeit}
+
+                    \vspace{0.2cm}
+                    \item \textbf{Datensicherheit} (Redundanz)
+                    
+                    \vspace{0.2cm}
+                    \item \textbf{Datenintegrität} (CRC-Check)
+
+                    \vspace{0.2cm}
+                    \item \textbf{Flexible Bootloader-Partition}
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+
+        \pause
+        \begin{column}{0.4\textwidth}
+            \begin{alertblock}{Nachteile}
+                \begin{itemize}
+                    \item \textbf{Größere Datenstrukturen:} Partitionstabelle belegt mehr Speicher.
+                    \begin{itemize}
+                        \item MBR: Nur LBA 0 belegt.
+                        \item GPT: Bei 128 Einträgen im Partitions-Array: LBA 0 - 33 belegt.
+                    \end{itemize}
+
+                    \item \textbf{Kompatibilität:} Ältere Betriebssysteme / Versionen unterstützen GPT nicht immer.
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+    \end{columns}
+\end{frame}

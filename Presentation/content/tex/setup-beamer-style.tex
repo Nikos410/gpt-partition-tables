@@ -1,0 +1,57 @@
+\mode<presentation>
+
+% General look and feel
+\usetheme{Boadilla}
+\usecolortheme{default}
+
+% Bold text in headings
+\usefonttheme{structurebold} 
+
+% Default enumeration items
+\setbeamertemplate{items}[default]
+
+% Not rounded blocks
+\setbeamertemplate{blocks}[default]
+
+% set custom colors
+\definecolor{whs-green}{HTML}{6BAB25} 
+\setbeamercolor{item}{fg=whs-green}
+\setbeamercolor{frametitle}{fg=whs-green}
+\addtobeamertemplate{block alerted begin}{%
+  \setbeamercolor*{item}{fg=red}%
+}{}
+
+% Add whs logo
+\addtobeamertemplate{frametitle}{}{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east,yshift=2pt] at (current page.north east) {\includegraphics[height=0.8cm]{content/graphics/whs-logo.png}};
+\end{tikzpicture}}
+
+% remove nav symbols
+\setbeamertemplate{navigation symbols}{}
+
+% setup footer
+\makeatother
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[left,dp=1ex,ht=1cm,wd=0.2\paperwidth]{}%
+    \usebeamerfont{title in head/foot}
+    \hspace*{0.1cm}
+    Nikos Epping
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[center,dp=1ex,ht=1cm,wd=0.6\paperwidth]{foot-title}%
+    \usebeamerfont{title in head/foot}
+    GPT Partitionstabellen
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[right,dp=1ex,ht=2.25ex,wd=0.2\paperwidth]{}%
+    \usebeamerfont{title in head/foot}
+    06.01.2021
+    \hspace*{0.4cm}
+    \insertframenumber{} / \inserttotalframenumber
+    \hspace*{0.2cm}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter

@@ -1,0 +1,43 @@
+\begin{frame}
+    \frametitle{Bootloader}
+
+    Code, der ausgeführt um ein Betriebssystem zu starten.
+    
+    \vspace{0.5cm}
+
+    \pause
+
+    \begin{columns}[T] 
+        \begin{column}{0.4\textwidth}
+
+            \textbf{MBR:} 
+            Fester Bereich in der MBR Datenstruktur.
+
+            \vspace{0.5cm}
+            \begin{alertblock}{Nachteile}
+                \begin{itemize}
+                    \item Nur 446 Bytes verwendbar.
+                    \item Nur Einstiegspunkt, verweist meist auf Code in einer Partition.
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+
+        \pause
+        \begin{column}{0.45\textwidth}
+
+            \textbf{GPT:} 
+            Spezielle System-Partition mit definierter \texttt{partitionTypeGuid}.
+
+            \vspace{0.5cm}
+            \begin{exampleblock}{Vorteile}
+                \begin{itemize}
+                    \item Größe Flexibel an Bootloader-Code anpassbar.
+                    \item Einträge für mehrere Betriebssysteme möglich.
+                    \begin{itemize}
+                        \item Multiboot-Systeme deutlich einfacher.
+                    \end{itemize}
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}

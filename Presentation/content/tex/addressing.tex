@@ -1,0 +1,60 @@
+\begin{frame}
+    \frametitle{\_}
+
+    \begin{center}
+        \vspace{1cm}
+        \Huge{\textbf{Datenträger-Adressierung}}
+
+        \vspace{0.5cm}
+        \LARGE{Wie kann ich einen Bereich auf einem Datenträger eindeutig identifizieren?}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Cylinder-Head-Sector (CHS)}
+
+    \begin{columns}[T]
+        \begin{column}{0.4\textwidth}
+            
+            \begin{itemize}
+                \item Historisches Verfahren
+                \vspace{0.2cm}
+                \item Orientiert an physischem Aufbau von (HDD-) Festplatten
+            \end{itemize}
+
+            \vspace{1cm}
+            \begin{alertblock}<2>{Probleme}
+                \begin{itemize}
+                    \item Heutzutage: Andere Festplattengeometrien / Speichertechnologien
+                    
+                    \vspace{0.2cm}
+
+                    \item CHS-Adressen passen nicht (mehr) zum physischen Aufbau von Datenträgern
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+
+        \begin{column}{0.4\textwidth}
+            \includesvg[width=\textwidth]{content/graphics/CHS.svg}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Logical Block Adressing (LBA)}
+
+    \begin{itemize}
+        \item Datenträger wird in logische Blöcke unterteilt (Meist 512 Bytes groß)
+        \item Aufsteigende Nummerierung, beginnend bei 0
+        \item Festplatten-Controller "übersetzt" LBA-Nummer in tatsächlichen Speicherort
+    \end{itemize}
+
+    \vspace{1cm}
+    \begin{exampleblock}<2>{Vorteile}
+        \begin{itemize}
+            \item Unabhänig von Art des Datenträgers
+            \item Abstraktion
+            \item Vereinfachte Handhabung
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
