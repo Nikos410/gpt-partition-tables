@@ -160,6 +160,8 @@ Im Partitions-Array werden die Informationen zu den einzelnen Partitionen gespei
 Auch von dieser Datenstruktur gibt es eine primäre und ein Backup.
 Der primäre Header verweist im Feld \textit{partitionEntryLba} auf das primären Partitions-Array, der Backup-Header auf das Backup-Partitions-Array.
 
+Das Partitions-Array muss laut Spezifikation mindestens 16 KB groß sein. Bei einer typischen Block-Größe von 512 Bytes entspricht dies 32 Blöcken.\cite{apple-gpt}
+
 In Abbildung \ref{fig:GptPartitionEntry.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um ein Element im Partitions-Array abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
