@@ -72,6 +72,7 @@ Dieser Header beinhaltet allgemeine Informationen über den Datenträger.
 Im letzten Block eines Datenträgers befindet sich ein zweiter Header, um durch Redundanz Datenverlust vorzubeugen.
 Der Header in LBA 1 wird dabei als \textit{primärer}, der Header am Ende als \textit{Backup}-Header bezeichnet.
 
+Alle Felder des Headers sind nach dem "Little-Endian"-Format gespeichert.
 In Abbildung \ref{fig:GptHeader.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um den Header abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
@@ -162,6 +163,7 @@ Der primäre Header verweist im Feld \textit{partitionEntryLba} auf das primäre
 
 Das Partitions-Array muss laut Spezifikation mindestens 16 KB groß sein. Bei einer typischen Block-Größe von 512 Bytes entspricht dies 32 Blöcken.\cite{apple-gpt}
 
+Alle Felder des Partitions-Arrays sind nach dem "Little-Endian"-Format gespeichert.
 In Abbildung \ref{fig:GptPartitionEntry.hpp} ist die Datenstruktur dargestellt, die im \textit{simple-gpt-reader} verwendet wird, um ein Element im Partitions-Array abzubilden.
 Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erläutert.
 
