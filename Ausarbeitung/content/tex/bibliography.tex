@@ -1,3 +1,14 @@
+\makeatletter
+\def\thebibliography#1{\section{Literaturverzeichnis\@mkboth
+  {LITERATURVERZEICHNIS}{LITERATURVERZEICHNIS}}\list
+  {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+\advance\leftmargin\labelsep
+\usecounter{enumi}}
+\def\newblock{\hskip .11em plus .33em minus .07em}
+\sloppy\clubpenalty4000\widowpenalty4000
+\sfcode`\.=1000\relax}
+\makeatother
+
 \begin{thebibliography}{99}
     \bibitem{ata-5}
         T13 Committee.
