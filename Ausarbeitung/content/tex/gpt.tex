@@ -322,5 +322,19 @@ Diese Vorteile werden an dieser Stelle noch einmal gesammelt aufgeführt.
     \item \textbf{Bootloader:}
     GPT besitzt eine spezielle Systempartition, die den Bootloader-Code beinhaltet.
     Dadurch wird die Verwaltung des Bootloader-Codes und die Verwendung von Multiboot-Systemen vereinfacht (vgl. Abschnitt \ref{sec:gpt:bootloader}).
+\end{itemize}
 
+\subsection{Nachteile gegenüber MBR}
+\label{sec:gpt:disadvantages}
+
+\begin{itemize}
+    \item \textbf{Overhead:}
+    Ein Nachteil des GPT-Standard ist, dass die verwendeten Datenstrukturen größer sind und dadurch mehr unbenutzbaren Speicher auf dem Datenträger verursachen.
+    Dies wird auch als größerer "Overhead" bezeichnet.
+    Allerdings sind diese Datenmengen immer noch so gering, dass dies in der Praxis kein relevantes Problem darstellt.
+
+    \item \textbf{Kompatibilität:}
+    Da GPT nicht zu MBR abwärtskompatibel ist, wird GPT von älteren Betriebssystemen, bzw. Versionen davon, nicht unterstützt.
+    Aber auch dieser Nachteil verliert zunehmend an Relevanz, da alle verbreiteten Betriebssysteme den GPT-Standard in aktuellen Versionen unterstützen.
+    Dazu zählen unter Anderem Linux, Mac OS, Windows, (Free- / Net- / Open-) BSD und Solaris
 \end{itemize}
