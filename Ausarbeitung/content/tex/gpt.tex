@@ -85,6 +85,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \label{fig:GptHeader.hpp}
 \end{figure}
 
+\newpage
 \begin{itemize}
     \item \textbf{signature}: 
     Das erste Feld beinhaltet eine Signatur, um zu erkennen, ob es sich um einen GPT Header handelt.
@@ -103,7 +104,6 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \item \textbf{headerSize}:
     Die Größe des Headers in Bytes.
     Üblicherweise entspricht der Wert dieses Feldes der Größe der in Abbildung \ref{fig:GptHeader.hpp} dargestellten Datenstruktur (96 Bytes).
-    
     Auch dieses Feld dient dazu, zukünftige Erweiterungen des GPT-Standards, die Änderungen an den Datenstrukturen vornehmen könnten, zu erleichtern.
 
     \newpage
@@ -185,7 +185,6 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     Da GUIDs als global eindeutig angesehen werden können, kann ein Betriebssystem-Hersteller selbstständig neue GUIDs vergeben, ohne diese bei einer zentralen Registrierungsstelle eintragen zu lassen.
     Daher gibt es auch keine vollständige Liste aller existierenden GUIDs, ein Betriebssystem kennt meist nur seine "eigenen" GUIDs.
 
-    \newpage
     Anhand dieses Feldes kann auch erkannt werden, ob dieser Eintrag im Partitions-Array in Verwendung oder leer ist.
     Eine leere GUID\footnote{
         Eine GUID gilt als "leer", wenn alle Felder den Wert 0 besitzen (\texttt{00000000-0000-0000-0000-000000000000})
@@ -208,7 +207,6 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
     \item \textbf{endingLba}:
     Der letzte Block der Partition, die von diesem Eintrag beschrieben wird.
 
-    \newpage
     \item \textbf{attributes}:
     Die einzelnen Bits dieses Feldes entsprechen verschiedenen Attributen.
     Diese Attribute sind für die Partitionierung selbst nicht relevant, sondern spezifizieren vor Allem, wie das Betriebssystem oder die Firmware eines Computers mit dieser Partition interagieren muss.
@@ -222,6 +220,7 @@ Die Bedeutung und der Zweck der einzelnen Felder werden im Folgenden genauer erl
 
 Wenn der Wert des Feldes \textit{sizeOfPartitionEntry} größer ist als die zuvor beschriebene Datenstruktur, muss der Rest des Partitions-Eintrags den Wert 0 besitzen und darf nicht anderweitig verwendet werden.\cite{uefi-spec}
 
+\newpage
 \subsection{Bearbeiten der Partitionstabelle}
 Wenn Änderungen an den GPT-Datenstrukturen vorgenommen werden, beispielsweise beim Hinzufügen neuer Partitionen, müssen die folgenden Richtlinien beachtet werden:
 
@@ -241,7 +240,6 @@ Wenn Änderungen an den GPT-Datenstrukturen vorgenommen werden, beispielsweise b
 \subsection{Gültigkeit prüfen}
 Um zu prüfen, ob eine GPT Partitionstabelle gültig ist, müssen folgende Schritte für den primären und sekundären Header durchgeführt werden:
 
-\newpage
 \begin{enumerate}
     \item Prüfen, ob das Feld \textit{signature} dem Wert \texttt{0x5452415020494645} entspricht.
     \item Prüfen, ob die CRC32-Checksumme des Headers korrekt ist.
@@ -252,6 +250,7 @@ Um zu prüfen, ob eine GPT Partitionstabelle gültig ist, müssen folgende Schri
 Wenn ein Header fehlerhaft ist, muss geprüft werden, ob der andere Header korrekt ist.
 In diesem Fall kann der fehlerhafte Header wiederhergestellt werden, allerdings sollte der Anwender dies explizit bestätigen müssen.\cite{uefi-spec}
 
+\newpage
 \subsection{Bootloader}
 \label{sec:gpt:bootloader}
 
